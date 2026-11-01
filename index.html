@@ -321,6 +321,33 @@
     .icon-btn:hover { background: rgba(255,255,255,.2); }
     .close { inset-inline-start: 14px; }
 
+    /* ===== Certificate code box ===== */
+    .code-box {
+      display: flex; align-items: center; gap: 12px;
+      max-width: 640px; margin: 16px auto 0; padding: 10px 12px 10px 10px;
+      text-align: start;
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    }
+    .code-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .code-meta small { font-size: 12px; color: var(--muted); }
+    .code-val {
+      direction: ltr; unicode-bidi: plaintext; text-align: left;
+      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 13.5px; color: var(--text); word-break: break-all; user-select: all;
+    }
+    .code-box .btn { flex-shrink: 0; padding: 8px 16px; }
+    .code-box .btn.copied { color: var(--accent-2); border-color: var(--accent-2); }
+    .verify-hint { margin: 10px auto 0 !important; font-size: 13px; }
+    .toast {
+      position: fixed; z-index: 1500; inset-inline: 16px; bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      width: fit-content; max-width: calc(100% - 32px); margin-inline: auto; padding: 10px 18px;
+      font-size: 14px; font-weight: 600; text-align: center; color: #fff;
+      background: #0f1630; border: 1px solid var(--accent-2); border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.4);
+      opacity: 0; transform: translateY(12px); pointer-events: none; transition: .25s;
+    }
+    .toast.show { opacity: 1; transform: none; }
+
     /* ===== Profile avatar + card ===== */
     .profile-btn {
       display: flex; align-items: center; gap: 10px; flex-shrink: 0;
@@ -379,6 +406,15 @@
     }
     .lb-tools .tool-btn { min-width: 36px; height: 34px; font-size: 18px; padding: 0 8px; }
     .lightbox .icon-btn { color: #fff; background: rgba(255,255,255,.12); }
+
+    /* ===== Back to top ===== */
+    .to-top {
+      position: fixed; z-index: 400; inset-inline-end: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      width: 44px; height: 44px; font-size: 20px; font-weight: 800; color: #fff; cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #3b63d8); border: 0; border-radius: 50%;
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+    }
+    body.gated .to-top { display: none; }
 
     /* ===== English / LTR ===== */
     [dir="ltr"] .search input { padding: 9px 12px 9px 38px; }
@@ -475,6 +511,8 @@
 <p class="no-results" id="noResults">لا توجد نتائج مطابقة لبحثك.</p>
 
 <footer id="footer"></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<button class="to-top" id="toTop" type="button" aria-label="للأعلى" hidden>↑</button>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-content">
@@ -483,6 +521,11 @@
     <h3 id="modalTitle"></h3>
     <div class="modal-meta" id="modalMeta"></div>
     <p id="modalInfo"></p>
+    <div class="code-box" id="codeBox" hidden>
+      <div class="code-meta"><small id="codeLbl">رمز الشهادة</small><code class="code-val" id="codeVal"></code></div>
+      <button class="btn" id="btnCopy" type="button">نسخ الرمز</button>
+    </div>
+    <p class="verify-hint" id="verifyHint" hidden></p>
     <div class="actions">
       <button class="btn" id="btnZoom">تكبير</button>
       <button class="btn primary" id="btnDownload">تحميل الشهادة</button>
@@ -543,32 +586,33 @@
      cat = القسم (ai / tech / biz / skills / school)
      titleEn / descEn = النسخة الإنجليزية
      verify = رابط التحقق من الشهادة (اختياري — يظهر الزر فقط إن وُجد)
+     code   = رمز الشهادة (اختياري — يظهر صندوق الرمز مع زر النسخ إن وُجد)
      ========================================================= */
   const CERTS = [
     // ---- الذكاء الاصطناعي والبيانات
-    { cat:'ai', img:'certificate1.jpg',  title:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة', titleEn:'Advanced AI Concepts and Applications', issuer:'SDAIA', year:2025, desc:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.', descEn:'Advanced AI concepts and applications, part of the One Million Saudis in AI initiative.', verify:'' },
-    { cat:'ai', img:'certificate2.jpg',  title:'مبادئ الذكاء الاصطناعي', titleEn:'Principles of Artificial Intelligence', issuer:'SDAIA', year:2025, desc:'المبادئ الأساسية للذكاء الاصطناعي وأدواته، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.', descEn:'Core principles and tools of AI, part of the One Million Saudis in AI initiative.', verify:'' },
-    { cat:'ai', img:'certificate5.jpg',  title:'تطبيقات علم البيانات في القطاع الحكومي', titleEn:'Data Science Applications in Government', issuer:'HADAF × قدراتك', year:2025, hours:4, desc:'تطبيق علم البيانات لتحسين اتخاذ القرار داخل القطاع الحكومي.', descEn:'Applying data science to improve decision-making in the government sector.', verify:'' },
-    { cat:'ai', img:'certificate17.jpg', title:'أمن الذكاء الاصطناعي', titleEn:'AI Security', issuer:'HRDF', year:2026, hours:1, desc:'دورة أمن الذكاء الاصطناعي المقدمة من برنامج التدريب الإلكتروني.', descEn:'AI security course offered through the e-training program.', verify:'' },
+    { cat:'ai', img:'certificate1.jpg',  title:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة', titleEn:'Advanced AI Concepts and Applications', issuer:'SDAIA', year:2025, desc:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.', descEn:'Advanced AI concepts and applications, part of the One Million Saudis in AI initiative.', code:'Pr3GjG8H7M', verify:'https://learn.samai.futurex.sa/mod/customcert/verify_certificate.php?code=Pr3GjG8H7M&qrcode=1' },
+    { cat:'ai', img:'certificate2.jpg',  title:'مبادئ الذكاء الاصطناعي', titleEn:'Principles of Artificial Intelligence', issuer:'SDAIA', year:2025, desc:'المبادئ الأساسية للذكاء الاصطناعي وأدواته، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.', descEn:'Core principles and tools of AI, part of the One Million Saudis in AI initiative.', code:'Op3yIEFzKC', verify:'https://learn.samai.futurex.sa/mod/customcert/verify_certificate.php?code=Op3yIEFzKC&qrcode=1' },
+    { cat:'ai', img:'certificate5.jpg',  title:'تطبيقات علم البيانات في القطاع الحكومي', titleEn:'Data Science Applications in Government', issuer:'HADAF × قدراتك', year:2025, hours:4, desc:'تطبيق علم البيانات لتحسين اتخاذ القرار داخل القطاع الحكومي.', descEn:'Applying data science to improve decision-making in the government sector.', code:'1d5d3fe8a5dc42138395b86e18be181c', verify:'https://doroob.sa/ar/employer/check_certificate/' },
+    { cat:'ai', img:'certificate17.jpg', title:'أمن الذكاء الاصطناعي', titleEn:'AI Security', issuer:'HRDF', year:2026, hours:1, desc:'دورة أمن الذكاء الاصطناعي المقدمة من برنامج التدريب الإلكتروني.', descEn:'AI security course offered through the e-training program.', code:'5bc74b40002645798a61bbbdec19ccbd', verify:'https://doroob.sa/ar/employer/check_certificate/' },
 
     // ---- البرمجة والتقنية
     { cat:'tech', img:'certificate7.jpg',  title:'ساعة برمجة (1)', titleEn:'Hour of Code (1)', issuer:'Code.org × Microsoft', year:2023, desc:'برنامج Hour of Code لتعلم أساسيات البرمجة والتفكير المنطقي.', descEn:'Hour of Code program for learning programming basics and logical thinking.' },
     { cat:'tech', img:'certificate8.jpg',  title:'ساعة برمجة (2)', titleEn:'Hour of Code (2)', issuer:'Code.org × Microsoft', year:2023, desc:'المرحلة الثانية من Hour of Code لتعزيز مهارات البرمجة.', descEn:'Second stage of Hour of Code to strengthen programming skills.' },
     { cat:'tech', img:'certificate9.jpg',  title:'ساعة برمجة (3)', titleEn:'Hour of Code (3)', issuer:'Code.org × Microsoft', year:2023, desc:'المرحلة الثالثة من Hour of Code لتطبيق مفاهيم البرمجة عمليًا.', descEn:'Third stage of Hour of Code, applying programming concepts in practice.' },
-    { cat:'tech', img:'certificate13.jpg', title:'إدارة مشاريع تقنية المعلومات', titleEn:'IT Project Management', issuer:'HRDF', year:2026, hours:1, desc:'دورة إدارة مشاريع تقنية المعلومات المقدمة من برنامج التدريب الإلكتروني.', descEn:'IT project management course offered through the e-training program.', verify:'' },
+    { cat:'tech', img:'certificate13.jpg', title:'إدارة مشاريع تقنية المعلومات', titleEn:'IT Project Management', issuer:'HRDF', year:2026, hours:1, desc:'دورة إدارة مشاريع تقنية المعلومات المقدمة من برنامج التدريب الإلكتروني.', descEn:'IT project management course offered through the e-training program.', code:'2cd21165490b41d1836a63a50763bc74', verify:'https://doroob.sa/ar/employer/check_certificate/' },
 
     // ---- الأعمال والإدارة
-    { cat:'biz', img:'certificate3.jpg',  title:'دليلك الشامل إلى التجارة الإلكترونية', titleEn:'Your Complete Guide to E-Commerce', issuer:'HADAF × منشآت', year:2025, hours:2, desc:'أساسيات التجارة الإلكترونية والتسويق الرقمي.', descEn:'Fundamentals of e-commerce and digital marketing.' },
-    { cat:'biz', img:'certificate4.jpg',  title:'التسويق', titleEn:'Marketing', issuer:'HADAF × بنك التنمية الاجتماعية', year:2025, hours:5, desc:'تطوير مهارات التسويق وتحليل الحملات الإعلانية.', descEn:'Developing marketing skills and analyzing advertising campaigns.' },
-    { cat:'biz', img:'certificate12.jpg', title:'العمل الحر', titleEn:'Freelancing', issuer:'HRDF × بنك التنمية الاجتماعية', year:2026, hours:3, desc:'دورة العمل الحر المقدمة من برنامج التدريب الإلكتروني.', descEn:'Freelancing course offered through the e-training program.', verify:'' },
-    { cat:'biz', img:'certificate14.jpg', title:'أساسيات الإدارة', titleEn:'Management Fundamentals', issuer:'HRDF', year:2026, hours:2, desc:'دورة أساسيات الإدارة المقدمة من برنامج التدريب الإلكتروني.', descEn:'Management fundamentals course offered through the e-training program.', verify:'' },
-    { cat:'biz', img:'certificate15.jpg', title:'إدارة الرياضات الإلكترونية', titleEn:'Esports Management', issuer:'HRDF × HP', year:2026, hours:11, desc:'دورة إدارة الرياضات الإلكترونية المقدمة من برنامج التدريب الإلكتروني.', descEn:'Esports management course offered through the e-training program.', verify:'' },
+    { cat:'biz', img:'certificate3.jpg',  title:'دليلك الشامل إلى التجارة الإلكترونية', titleEn:'Your Complete Guide to E-Commerce', issuer:'HADAF × منشآت', year:2025, hours:2, desc:'أساسيات التجارة الإلكترونية والتسويق الرقمي.', descEn:'Fundamentals of e-commerce and digital marketing.', code:'73b30967b7d842569f4d1df0cd2fed3a', verify:'https://doroob.sa/ar/employer/check_certificate/' },
+    { cat:'biz', img:'certificate4.jpg',  title:'التسويق', titleEn:'Marketing', issuer:'HADAF × بنك التنمية الاجتماعية', year:2025, hours:5, desc:'تطوير مهارات التسويق وتحليل الحملات الإعلانية.', descEn:'Developing marketing skills and analyzing advertising campaigns.', code:'c266d6f5bcf64cee8c5d0384e5c9dc3c', verify:'https://doroob.sa/ar/employer/check_certificate/' },
+    { cat:'biz', img:'certificate12.jpg', title:'العمل الحر', titleEn:'Freelancing', issuer:'HRDF × بنك التنمية الاجتماعية', year:2026, hours:3, desc:'دورة العمل الحر المقدمة من برنامج التدريب الإلكتروني.', descEn:'Freelancing course offered through the e-training program.', code:'630a0484f23b4036accf567edd7c9c8e', verify:'https://doroob.sa/ar/employer/check_certificate/' },
+    { cat:'biz', img:'certificate14.jpg', title:'أساسيات الإدارة', titleEn:'Management Fundamentals', issuer:'HRDF', year:2026, hours:2, desc:'دورة أساسيات الإدارة المقدمة من برنامج التدريب الإلكتروني.', descEn:'Management fundamentals course offered through the e-training program.', code:'6b2fdff9420c4570a43bd59b48a95490', verify:'https://doroob.sa/ar/employer/check_certificate/' },
+    { cat:'biz', img:'certificate15.jpg', title:'إدارة الرياضات الإلكترونية', titleEn:'Esports Management', issuer:'HRDF × HP', year:2026, hours:11, desc:'دورة إدارة الرياضات الإلكترونية المقدمة من برنامج التدريب الإلكتروني.', descEn:'Esports management course offered through the e-training program.', code:'db4bcd1d4d9c46a8aa8b53a94db2633f', verify:'https://doroob.sa/ar/employer/check_certificate/' },
 
     // ---- مهارات وأنشطة
     { cat:'skills', img:'certificate6.jpg',  title:'شهادة شكر وتقدير — ريالي للوعي المالي', titleEn:'Appreciation Certificate — Riyali Financial Literacy', issuer:'ريالي × وزارة التعليم', year:2025, desc:'اجتياز برنامج شباب ريالي وإتمام مرحلة الوعي المالي.', descEn:'Completed the Shabab Riyali program and its financial literacy stage.' },
     { cat:'skills', img:'certificate10.jpg', title:'المعسكر العالمي للكشافة JOTA-JOTI', titleEn:'JOTA-JOTI World Scout Jamboree', issuer:'World Scouts', year:2023, desc:'المشاركة في JOTA-JOTI، الحدث العالمي للكشافة عبر الراديو والإنترنت.', descEn:'Participation in JOTA-JOTI, the global scouting event over radio and the internet.' },
     { cat:'skills', img:'certificate11.jpg', title:'مسابقة المعرفة الإحصائية', titleEn:'Statistical Knowledge Competition', issuer:'GASTAT × وزارة التعليم', year:2026, desc:'مشاركة إلكترونية صادرة من الهيئة العامة للإحصاء بالتعاون مع وزارة التعليم.', descEn:'Online participation issued by the General Authority for Statistics with the Ministry of Education.' },
-    { cat:'skills', img:'certificate16.jpg', title:'كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', titleEn:'Writing Formal Emails and Cover Letters', issuer:'HRDF × British Council', year:2026, hours:1, desc:'كتابة الرسائل الرسمية وخطابات التقديم.', descEn:'Writing formal messages and cover letters.', verify:'' },
+    { cat:'skills', img:'certificate16.jpg', title:'كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', titleEn:'Writing Formal Emails and Cover Letters', issuer:'HRDF × British Council', year:2026, hours:1, desc:'كتابة الرسائل الرسمية وخطابات التقديم.', descEn:'Writing formal messages and cover letters.', code:'b4cb913ee5ca4d6183e8f126233220ae', verify:'https://doroob.sa/ar/employer/check_certificate/' },
     // ---- الشهادات المدرسية
     { cat:'school', img:'school1.jpg', title:'شهادة الصف الأول الابتدائي', titleEn:'Elementary First Grade Certificate', issuer:'وزارة التعليم', year:2017, desc:'ابتدائية جلمودة — العام الدراسي 1437/1438هـ، ينتقل الطالب بتقدير متفوق في جميع المواد.', descEn:'Jolmodah Elementary School — 2016/2017, promoted with Excellent in all subjects.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=8bbc3bc6-4683-4218-8090-2dd540327e15' },
     { cat:'school', img:'school2.jpg', title:'شهادة الصف الثاني الابتدائي', titleEn:'Elementary Second Grade Certificate', issuer:'وزارة التعليم', year:2018, desc:'ابتدائية الدفي — العام الدراسي 1438/1439هـ، ينتقل الطالب.', descEn:'Aldeffy Elementary School — 2017/2018, promoted to the next grade.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=dc36db2e-11f6-4c4c-abee-e383e4031dc0' },
@@ -589,7 +633,7 @@
     ar: { title:'ملف الإنجازات', gateSub:'أدخل بيانات الدخول للاطلاع على الشهادات.', user:'اسم المستخدم', pass:'كلمة المرور', enter:'دخول',
           heroTitle:'شهادات', heroP:'الشهادات المهنية والمدرسية والأنشطة، مصنّفة في أقسام لسهولة التصفح.',
           cert:'شهادة', certs:'شهادات', hrs:'ساعة تدريبية', issuers:'جهة مانحة', search:'بحث...',
-          download:'تحميل الشهادة', close:'إغلاق', verify:'تحقق من الشهادة', dlAll:'تحميل الشهادات', pickTitle:'اختر الشهادة', pickSub:'اضغط على الشهادة لتحميلها.', zoom:'تكبير', zoomOut:'تصغير',
+          download:'تحميل الشهادة', close:'إغلاق', verify:'تحقق من الشهادة', codeLbl:'رمز الشهادة', copy:'نسخ الرمز', copied:'تم النسخ ✓', copyFail:'تعذّر النسخ — حدّد الرمز وانسخه يدويًا', copiedToast:'تم نسخ الرمز — الصقه في صفحة التحقق', hintPaste:'افتح صفحة التحقق الرسمية والصق الرمز في خانة «رمز الشهادة».', hintDirect:'يفتح الرابط صفحة التحقق الرسمية مباشرة بنتيجة هذه الشهادة.', dlAll:'تحميل الشهادات', top:'للأعلى', pickTitle:'اختر الشهادة', pickSub:'اضغط على الشهادة لتحميلها.', zoom:'تكبير', zoomOut:'تصغير',
           none:'لا توجد نتائج مطابقة لبحثك.', view:'عرض الشهادة', soon:'سيتم إضافة الشهادات قريبًا',
           soonHint:'أضف شهاداتك في مصفوفة', soonHint2:'داخل الكود بقيمة',
           name:'بدر أحمد باشراحيل', brand:'بدر <span>باشراحيل</span>', role:'طالب', age:'العمر', ageVal:'17 سنة',
@@ -600,7 +644,7 @@
     en: { title:'Achievements Portfolio', gateSub:'Enter your credentials to view the certificates.', user:'Username', pass:'Password', enter:'Sign in',
           heroTitle:'Certificates of', heroP:'Professional and school certificates and activities, organized into sections for easy browsing.',
           cert:'certificate', certs:'certificates', hrs:'training hours', issuers:'issuers', search:'Search...',
-          download:'Download certificate', close:'Close', verify:'Verify certificate', dlAll:'Download certificates', pickTitle:'Choose a certificate', pickSub:'Tap a certificate to download it.', zoom:'Zoom', zoomOut:'Zoom out',
+          download:'Download certificate', close:'Close', verify:'Verify certificate', codeLbl:'Certificate code', copy:'Copy code', copied:'Copied ✓', copyFail:'Copy failed — select the code and copy it manually', copiedToast:'Code copied — paste it on the verification page', hintPaste:'Open the official verification page and paste the code into the “Certificate code” field.', hintDirect:'This link opens the official verification page directly with this certificate’s result.', dlAll:'Download certificates', top:'Back to top', pickTitle:'Choose a certificate', pickSub:'Tap a certificate to download it.', zoom:'Zoom', zoomOut:'Zoom out',
           none:'No matching results.', view:'View certificate', soon:'Certificates coming soon',
           soonHint:'Add your certificates to the', soonHint2:'array in the code with',
           name:'Badr Ahmed Bashraheel', brand:'Badr <span>Bashraheel</span>', role:'Student', age:'Age', ageVal:'17 years',
@@ -658,7 +702,6 @@
       const total = CERTS.filter(c => c.cat === s.id).length;
       if (q && !items.length) return;
       shown += items.length;
-
       const cards = items.map(c => {
         const idx = state.visible.push(c) - 1;
         const ttl = esc(L(c, 'title'));
@@ -710,6 +753,7 @@
     $('btnClose2').textContent = t('close');
     $('btnVerify').textContent = t('verify');
     $('btnZoom').textContent = t('zoom');
+    $('toTop').setAttribute('aria-label', t('top'));
     $('lbIn').setAttribute('aria-label', t('zoom'));
     $('lbOut').setAttribute('aria-label', t('zoomOut'));
     $('noResults').textContent = t('none');
@@ -771,6 +815,13 @@
     const v = $('btnVerify');
     v.hidden = !c.verify;
     if (c.verify) v.href = c.verify;
+    const direct = !!(c.code && c.verify && c.verify.includes(c.code));
+    $('codeBox').hidden = !c.code;
+    $('codeLbl').textContent = t('codeLbl');
+    $('codeVal').textContent = c.code || '';
+    const cb = $('btnCopy'); cb.textContent = t('copy'); cb.classList.remove('copied');
+    $('verifyHint').hidden = !(c.code && c.verify);
+    $('verifyHint').textContent = direct ? t('hintDirect') : t('hintPaste');
     $('modal').classList.add('active');
     document.body.classList.add('locked');
   }
@@ -782,6 +833,37 @@
     document.body.appendChild(a); a.click(); a.remove();
   }
   const downloadCert = () => downloadFile(state.visible[state.index]);
+  /* ===================== نسخ رمز الشهادة ===================== */
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; }
+    } catch (_) {}
+    try {                                            // بديل للمتصفحات القديمة / غير https
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+      const ok = document.execCommand('copy'); ta.remove(); return ok;
+    } catch (_) { return false; }
+  }
+  let toastTimer;
+  function toast(msg) {
+    const el = $('toast'); el.textContent = msg; el.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+  }
+  $('btnCopy').onclick = async () => {
+    const c = state.visible[state.index];
+    if (!c || !c.code) return;
+    const ok = await copyText(c.code), b = $('btnCopy');
+    if (ok) { b.textContent = t('copied'); b.classList.add('copied'); setTimeout(() => { b.textContent = t('copy'); b.classList.remove('copied'); }, 1800); }
+    else toast(t('copyFail'));
+  };
+  /* عند فتح صفحة التحقق (التي لا تقبل الرمز عبر الرابط) ننسخ الرمز تلقائيًا ليلصقه المستخدم */
+  $('btnVerify').addEventListener('click', () => {
+    const c = state.visible[state.index];
+    if (c && c.code && c.verify && !c.verify.includes(c.code)) copyText(c.code).then(ok => { if (ok) toast(t('copiedToast')); });
+  });
+
   $('btnClose').onclick = $('btnClose2').onclick = closeModal;
   $('btnDownload').onclick = downloadCert;
   $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) closeModal(); });
@@ -789,6 +871,10 @@
     if (!$('modal').classList.contains('active')) return;
     if (e.key === 'Escape' && !$('lightbox').classList.contains('active')) closeModal();
   });
+
+  /* زر العودة للأعلى */
+  addEventListener('scroll', () => { $('toTop').hidden = scrollY < 700; }, { passive: true });
+  $('toTop').onclick = () => scrollTo({ top: 0, behavior: 'smooth' });
 
   /* ===================== اختيار الشهادة للتحميل ===================== */
   function renderPicker() {
