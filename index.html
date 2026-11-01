@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="ملف الإنجازات — محمي بكلمة مرور." />
   <title>ملف الإنجازات</title>
+
+  <!-- معاينة المشاركة (واتساب وغيره): عدّل الرابطين بعد رفع الموقع، وصورة og.jpg مقاسها 1200×630 -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ملف الإنجازات" />
+  <meta property="og:description" content="الشهادات المهنية والأنشطة." />
+  <meta property="og:image" content="https://YOUR-SITE.com/og.jpg" />
+  <meta property="og:url" content="https://YOUR-SITE.com/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0a0f1e" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
@@ -21,8 +31,31 @@
       --accent-2: #22d3a6;
       --radius: 18px;
       --nav-h: 64px;
+      --tag-issuer: #a9c2ff;
+      --tag-hours: #7ff0cf;
+      --glass: rgba(255,255,255,.05);
     }
+    /* ===== الوضع الفاتح ===== */
+    :root[data-theme="light"] {
+      --bg: #f5f7fc; --bg-soft: #ffffff; --card: #ffffff;
+      --border: rgba(15,23,42,.12); --text: #0f172a; --muted: #5b6785;
+      --accent: #3b63d8; --accent-2: #0b9c78;
+      --tag-issuer: #2f55c9; --tag-hours: #0b8f6f;
+      --glass: rgba(15,23,42,.05);
+    }
+    [data-theme="light"] .topbar { background: rgba(255,255,255,.88); }
+    [data-theme="light"] .nav-links a:hover { background: rgba(0,0,0,.05); }
+    [data-theme="light"] .nav-links a.active { color: #1d3fa8; background: rgba(59,99,216,.14); }
+    [data-theme="light"] .stat { background: #fff; }
+    [data-theme="light"] .cert:hover, [data-theme="light"] .cert:focus-visible { box-shadow: 0 18px 40px rgba(15,23,42,.14); }
+    [data-theme="light"] .gate-card, [data-theme="light"] .modal-content { box-shadow: 0 30px 80px rgba(15,23,42,.18); }
+    [data-theme="light"] .modal { background: rgba(15,23,42,.55); }
+    [data-theme="light"] .icon-btn { color: var(--text); background: rgba(15,23,42,.06); }
+    [data-theme="light"] .gate-error { color: #d12f2f; }
+    [data-theme="light"] .btn.primary { color: #fff; }
+
     * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); }
     body {
       margin: 0;
@@ -62,7 +95,7 @@
     }
     .gate-card h1 { margin: 0 0 6px; font-size: 22px; font-weight: 800; }
     .gate-card p { margin: 0 0 22px; color: var(--muted); font-size: 14.5px; }
-    .gate-card label { display: block; text-align: right; font-size: 13px; color: var(--muted); margin: 0 2px 6px; }
+    .gate-card label { display: block; text-align: start; font-size: 13px; color: var(--muted); margin: 0 2px 6px; }
     .gate-card input {
       width: 100%; margin-bottom: 14px;
       font-family: inherit; font-size: 15px; padding: 12px 14px;
@@ -87,27 +120,27 @@
     .topbar-inner {
       max-width: 1200px; height: 100%;
       margin: 0 auto; padding: 0 20px;
-      display: flex; align-items: center; gap: 18px;
+      display: flex; align-items: center; gap: 14px;
     }
     .brand { font-weight: 800; font-size: 17px; white-space: nowrap; }
     .brand span { color: var(--accent); }
     .nav-links {
-      display: flex; gap: 4px; flex: 1;
+      display: flex; gap: 2px; flex: 1; min-width: 0;
       overflow-x: auto; scrollbar-width: none;
     }
     .nav-links::-webkit-scrollbar { display: none; }
     .nav-links a {
       white-space: nowrap;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--muted);
-      padding: 8px 14px;
+      padding: 8px 11px;
       border-radius: 10px;
       transition: .2s;
     }
     .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.05); }
     .nav-links a.active { color: #fff; background: rgba(91,140,255,.2); }
-    .search { position: relative; width: 230px; flex-shrink: 0; }
+    .search { position: relative; width: 170px; flex-shrink: 0; }
     .search input {
       width: 100%;
       font-family: inherit; font-size: 14px;
@@ -119,6 +152,12 @@
     }
     .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,140,255,.2); }
     .search svg { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); opacity: .5; }
+    .tool-btn {
+      flex-shrink: 0; min-width: 40px; height: 38px; padding: 0 12px;
+      font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer;
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px; transition: .2s;
+    }
+    .tool-btn:hover { border-color: var(--accent); }
 
     /* ===== Hero ===== */
     .hero {
@@ -151,6 +190,8 @@
     }
     .stat b { display: block; font-size: 28px; font-weight: 800; }
     .stat span { font-size: 13px; color: var(--muted); }
+    .hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .hero-actions .btn { text-decoration: none; display: inline-block; }
 
     /* ===== Sections ===== */
     .container { max-width: 1200px; margin: 0 auto; padding: 20px 20px 60px; }
@@ -171,7 +212,7 @@
       margin-inline-start: auto;
       font-size: 13px; padding: 4px 12px;
       color: var(--muted);
-      background: rgba(255,255,255,.05);
+      background: var(--glass);
       border: 1px solid var(--border);
       border-radius: 999px; white-space: nowrap;
     }
@@ -179,7 +220,7 @@
     .certs { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 22px; }
     .cert {
       display: flex; flex-direction: column; padding: 0;
-      text-align: right; color: inherit; cursor: pointer;
+      text-align: start; color: inherit; cursor: pointer;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -200,7 +241,7 @@
     }
     .cert:hover .thumb img { transform: scale(1.06); }
     .thumb::after {
-      content: 'عرض الشهادة';
+      content: attr(data-view);
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; color: #fff;
@@ -214,23 +255,22 @@
     .tag {
       font-size: 12px; padding: 3px 10px; border-radius: 999px;
       color: var(--muted);
-      background: rgba(255,255,255,.05);
+      background: var(--glass);
       border: 1px solid var(--border);
     }
-    .tag.issuer { color: #a9c2ff; background: rgba(91,140,255,.12); border-color: rgba(91,140,255,.3); }
-    .tag.hours { color: #7ff0cf; background: rgba(34,211,166,.1); border-color: rgba(34,211,166,.28); }
+    .tag.issuer { color: var(--tag-issuer); background: rgba(91,140,255,.12); border-color: rgba(91,140,255,.3); }
+    .tag.hours { color: var(--tag-hours); background: rgba(34,211,166,.1); border-color: rgba(34,211,166,.28); }
 
-    /* empty placeholder (school section) */
     .placeholder {
       grid-column: 1 / -1;
       text-align: center; padding: 42px 20px;
       color: var(--muted);
       border: 1.5px dashed rgba(148,163,184,.3);
       border-radius: var(--radius);
-      background: rgba(255,255,255,.02);
+      background: var(--glass);
     }
     .placeholder b { display: block; color: var(--text); font-size: 17px; margin-bottom: 6px; }
-    .placeholder code { direction: ltr; unicode-bidi: embed; background: rgba(255,255,255,.08); padding: 2px 8px; border-radius: 6px; font-size: 13px; color: #a9c2ff; }
+    .placeholder code { direction: ltr; unicode-bidi: embed; background: var(--glass); padding: 2px 8px; border-radius: 6px; font-size: 13px; color: var(--tag-issuer); }
 
     .no-results { display: none; text-align: center; color: var(--muted); padding: 70px 0; }
 
@@ -261,7 +301,7 @@
       font-size: 14px; font-weight: 600; padding: 10px 20px;
       color: var(--text); background: var(--card);
       border: 1px solid var(--border); border-radius: 12px;
-      cursor: pointer; transition: .2s;
+      cursor: pointer; transition: .2s; text-decoration: none; display: inline-block;
     }
     .btn:hover { border-color: var(--accent); }
     .btn.primary { color: #fff; background: linear-gradient(135deg,var(--accent),#3b63d8); border-color: transparent; }
@@ -274,8 +314,8 @@
       border: 1px solid var(--border); border-radius: 50%; transition: .2s;
     }
     .icon-btn:hover { background: rgba(255,255,255,.2); }
-    .close { left: 14px; }
-    .counter { position: absolute; top: 20px; right: 20px; font-size: 13px; color: var(--muted); }
+    .close { inset-inline-start: 14px; }
+    .counter { position: absolute; top: 20px; inset-inline-end: 20px; font-size: 13px; color: var(--muted); }
 
     /* ===== Profile avatar + card ===== */
     .profile-btn {
@@ -285,7 +325,7 @@
       background: none; border: 1px solid transparent; border-radius: 999px;
       transition: .2s;
     }
-    .profile-btn:hover, .profile-btn:focus-visible { background: rgba(255,255,255,.05); border-color: var(--border); outline: none; }
+    .profile-btn:hover, .profile-btn:focus-visible { background: var(--glass); border-color: var(--border); outline: none; }
     .avatar {
       width: 38px; height: 38px; flex-shrink: 0;
       display: grid; place-items: center;
@@ -302,19 +342,52 @@
       color: var(--accent-2); background: rgba(34,211,166,.1);
       border: 1px solid rgba(34,211,166,.3); border-radius: 999px;
     }
-    .p-rows { display: grid; gap: 10px; margin-top: 20px; text-align: right; }
+    .p-rows { display: grid; gap: 10px; margin-top: 20px; text-align: start; }
     .p-row {
       display: flex; justify-content: space-between; align-items: center; gap: 14px;
       padding: 12px 14px;
       background: var(--card); border: 1px solid var(--border); border-radius: 12px;
     }
     .p-row span { color: var(--muted); font-size: 13.5px; white-space: nowrap; }
-    .p-row b { font-size: 15px; font-weight: 700; text-align: left; }
+    .p-row b { font-size: 15px; font-weight: 700; }
 
+    /* ===== Picker + Lightbox ===== */
+    .pick-list { display: grid; gap: 8px; max-height: 60vh; overflow-y: auto; padding-inline-end: 2px; }
+    .pick-sec { margin-top: 8px; font-size: 13px; font-weight: 700; color: var(--accent); }
+    .pick-item {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 11px 14px; font-size: 14.5px; text-align: start; color: var(--text); cursor: pointer;
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; transition: .2s;
+    }
+    .pick-item:hover, .pick-item:focus-visible { border-color: var(--accent); outline: none; }
+    .pick-item.done .pick-dl { color: var(--accent-2); }
+    .pick-dl { flex-shrink: 0; font-weight: 800; color: var(--muted); }
+    .lightbox { padding: 0; align-items: stretch; z-index: 1200; background: rgba(5,8,18,.95); }
+    .lb-stage { width: 100%; height: 100%; overflow: auto; display: flex; }
+    .lb-stage img { margin: auto; display: block; background: #fff; cursor: zoom-in; transition: width .2s; }
+    .lb-stage img.fit { max-width: 100%; max-height: 100vh; object-fit: contain; }
+    .lb-stage img.zoomed { max-width: none; max-height: none; height: auto; cursor: zoom-out; }
+    .lb-tools {
+      position: absolute; top: 14px; inset-inline-end: 14px; z-index: 6;
+      display: flex; align-items: center; gap: 8px; padding: 4px 8px;
+      color: #fff; font-size: 13px; background: rgba(15,22,48,.85);
+      border: 1px solid var(--border); border-radius: 12px;
+    }
+    .lb-tools .tool-btn { min-width: 36px; height: 34px; font-size: 18px; padding: 0 8px; }
+    .lightbox .icon-btn { color: #fff; background: rgba(255,255,255,.12); }
+
+    /* ===== English / LTR ===== */
+    [dir="ltr"] .search input { padding: 9px 12px 9px 38px; }
+    [dir="ltr"] .search svg { right: auto; left: 12px; }
+    [dir="ltr"] .profile-btn { padding: 4px 14px 4px 4px; }
+    [dir="ltr"] .hero h1 { letter-spacing: 0; }
+
+    @media (max-width: 1150px) { .brand { display: none; } .search { width: 140px; } }
     @media (max-width: 760px) {
       .brand { display: none; }
-      .profile-btn { padding: 0; }
-      .search { width: 150px; }
+      .profile-btn { padding: 0 !important; }
+      .search { width: 120px; }
+      .topbar-inner { padding: 0 12px; gap: 8px; }
       .hero { padding: 50px 16px 38px; }
       .stat { min-width: 100px; padding: 12px 14px; }
       .stat b { font-size: 22px; }
@@ -322,6 +395,7 @@
       .section-head p { display: none; }
     }
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+
   </style>
 </head>
 <body class="gated">
@@ -331,13 +405,13 @@
     <div class="gate-icon">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
     </div>
-    <h1>ملف الإنجازات</h1>
-    <p>أدخل بيانات الدخول للاطلاع على الشهادات.</p>
-    <label for="gUser">اسم المستخدم</label>
+    <h1 data-t="title">ملف الإنجازات</h1>
+    <p data-t="gateSub">أدخل بيانات الدخول للاطلاع على الشهادات.</p>
+    <label for="gUser" data-t="user">اسم المستخدم</label>
     <input type="text" id="gUser" autocapitalize="off" spellcheck="false" required />
-    <label for="gPass">كلمة المرور</label>
+    <label for="gPass" data-t="pass">كلمة المرور</label>
     <input type="password" id="gPass" inputmode="numeric" required />
-    <button class="btn primary" type="submit" id="gBtn">دخول</button>
+    <button class="btn primary" type="submit" id="gBtn" data-t="enter">دخول</button>
     <div class="gate-error" id="gError" role="alert"></div>
   </form>
 </div>
@@ -346,31 +420,36 @@
   <div class="topbar-inner">
     <button class="profile-btn" id="btnProfile" type="button" aria-label="عرض المعلومات الشخصية">
       <span class="avatar" data-avatar></span>
-      <span class="brand">بدر <span>باشراحيل</span></span>
+      <span class="brand" id="brand"></span>
     </button>
     <div class="nav-links" id="navLinks"></div>
     <label class="search">
       <input type="search" id="search" placeholder="بحث..." aria-label="بحث" />
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     </label>
+    <button class="tool-btn" id="btnTheme" type="button" aria-label="تبديل المظهر">◐</button>
+    <button class="tool-btn" id="btnLang" type="button" aria-label="Language">EN</button>
   </div>
 </nav>
 
 <header class="hero">
-  <span class="eyebrow">ملف الإنجازات</span>
-  <h1>شهادات <span>بدر أحمد باشراحيل</span></h1>
-  <p>الشهادات المهنية والمدرسية والأنشطة، مصنّفة في أقسام لسهولة التصفح.</p>
+  <span class="eyebrow" data-t="title">ملف الإنجازات</span>
+  <h1><span id="heroTitle"></span> <span id="heroName"></span></h1>
+  <p data-t="heroP">الشهادات المهنية والمدرسية والأنشطة، مصنّفة في أقسام لسهولة التصفح.</p>
   <div class="stats">
-    <div class="stat"><b id="statCount">0</b><span>شهادة</span></div>
-    <div class="stat"><b id="statHours">0</b><span>ساعة تدريبية</span></div>
-    <div class="stat"><b id="statIssuers">0</b><span>جهة مانحة</span></div>
+    <div class="stat"><b id="statCount">0</b><span id="lblCount">شهادة</span></div>
+    <div class="stat"><b id="statHours">0</b><span data-t="hrs">ساعة تدريبية</span></div>
+    <div class="stat"><b id="statIssuers">0</b><span data-t="issuers">جهة مانحة</span></div>
+  </div>
+  <div class="hero-actions">
+    <button class="btn primary" type="button" id="btnDownloadAll" data-t="dlAll">تحميل الشهادات</button>
   </div>
 </header>
 
 <main class="container" id="main"></main>
 <p class="no-results" id="noResults">لا توجد نتائج مطابقة لبحثك.</p>
 
-<footer>© 2026 بدر أحمد باشراحيل — جميع الحقوق محفوظة</footer>
+<footer id="footer"></footer>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-content">
@@ -381,10 +460,31 @@
     <div class="modal-meta" id="modalMeta"></div>
     <p id="modalInfo"></p>
     <div class="actions">
+      <button class="btn" id="btnZoom">تكبير</button>
       <button class="btn primary" id="btnDownload">تحميل الشهادة</button>
+      <a class="btn" id="btnVerify" target="_blank" rel="noopener" hidden>تحقق من الشهادة</a>
       <button class="btn" id="btnClose2">إغلاق</button>
     </div>
   </div>
+</div>
+
+<div class="modal" id="pickModal" role="dialog" aria-modal="true" aria-labelledby="pickTitle">
+  <div class="modal-content profile-card" style="text-align:start">
+    <button class="icon-btn close" id="pickClose" aria-label="إغلاق">✕</button>
+    <h3 id="pickTitle" data-t="pickTitle" style="margin-top:6px">اختر الشهادة</h3>
+    <p data-t="pickSub" style="margin:0 0 14px">اضغط على الشهادة لتحميلها.</p>
+    <div class="pick-list" id="pickList"></div>
+  </div>
+</div>
+
+<div class="modal lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="icon-btn close" id="lbClose" aria-label="إغلاق">✕</button>
+  <div class="lb-tools">
+    <button class="tool-btn" id="lbOut" type="button" aria-label="تصغير">−</button>
+    <span id="lbPct">100%</span>
+    <button class="tool-btn" id="lbIn" type="button" aria-label="تكبير">+</button>
+  </div>
+  <div class="lb-stage" id="lbStage"><img id="lbImg" alt="" /></div>
 </div>
 
 <div class="modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="pName">
@@ -402,65 +502,118 @@
      الأقسام — رتّبها أو عدّل أسماءها كما تريد
      ========================================================= */
   const SECTIONS = [
-    { id: 'ai',     title: 'الذكاء الاصطناعي والبيانات', desc: 'مفاهيم الذكاء الاصطناعي وأمنه وعلم البيانات.', color: '#5b8cff',
+    { id: 'ai',     title: 'الذكاء الاصطناعي والبيانات', titleEn: 'AI & Data', desc: 'مفاهيم الذكاء الاصطناعي وأمنه وعلم البيانات.', descEn: 'AI concepts, AI security and data science.', color: '#5b8cff',
       icon: '<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/>' },
-    { id: 'tech',   title: 'البرمجة والتقنية', desc: 'أساسيات البرمجة وإدارة مشاريع التقنية.', color: '#22d3a6',
+    { id: 'tech',   title: 'البرمجة والتقنية', titleEn: 'Programming & Technology', desc: 'أساسيات البرمجة وإدارة مشاريع التقنية.', descEn: 'Programming basics and IT project management.', color: '#22d3a6',
       icon: '<path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/>' },
-    { id: 'biz',    title: 'الأعمال والإدارة', desc: 'التجارة الإلكترونية والتسويق والإدارة والعمل الحر.', color: '#f5a524',
+    { id: 'biz',    title: 'الأعمال والإدارة', titleEn: 'Business & Management', desc: 'التجارة الإلكترونية والتسويق والإدارة والعمل الحر.', descEn: 'E-commerce, marketing, management and freelancing.', color: '#f5a524',
       icon: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>' },
-    { id: 'skills', title: 'مهارات وأنشطة', desc: 'الوعي المالي والكتابة المهنية والمشاركات والفعاليات.', color: '#c084fc',
+    { id: 'skills', title: 'مهارات وأنشطة', titleEn: 'Skills & Activities', desc: 'الوعي المالي والكتابة المهنية والمشاركات والفعاليات.', descEn: 'Financial literacy, professional writing, participations and events.', color: '#c084fc',
       icon: '<circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/>' },
-    { id: 'school', title: 'الشهادات المدرسية', desc: 'شهادات التفوق والتكريم والمراحل الدراسية.', color: '#f472b6',
+    { id: 'school', title: 'الشهادات المدرسية', titleEn: 'School Certificates', desc: 'شهادات التفوق والتكريم والمراحل الدراسية.', descEn: 'Excellence, honors and school-stage certificates.', color: '#f472b6',
       icon: '<path d="m22 9-10-5L2 9l10 5 10-5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>' }
   ];
 
   /* =========================================================
      الشهادات — أضف شهادة جديدة بسطر واحد
-     cat = رقم القسم (ai / tech / biz / skills / school)
+     cat = القسم (ai / tech / biz / skills / school)
+     titleEn / descEn = النسخة الإنجليزية
+     verify = رابط التحقق من الشهادة (اختياري — يظهر الزر فقط إن وُجد)
      ========================================================= */
   const CERTS = [
     // ---- الذكاء الاصطناعي والبيانات
-    { cat:'ai', img:'certificate1.jpg',  title:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة', issuer:'SDAIA', year:2025, desc:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.' },
-    { cat:'ai', img:'certificate2.jpg',  title:'مبادئ الذكاء الاصطناعي', issuer:'SDAIA', year:2025, desc:'المبادئ الأساسية للذكاء الاصطناعي وأدواته، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.' },
-    { cat:'ai', img:'certificate5.jpg',  title:'تطبيقات علم البيانات في القطاع الحكومي', issuer:'HADAF × قدراتك', year:2025, hours:4, desc:'تطبيق علم البيانات لتحسين اتخاذ القرار داخل القطاع الحكومي.' },
-    { cat:'ai', img:'certificate17.jpg', title:'أمن الذكاء الاصطناعي', issuer:'HRDF', year:2026, hours:1, desc:'دورة أمن الذكاء الاصطناعي المقدمة من برنامج التدريب الإلكتروني.' },
+    { cat:'ai', img:'certificate1.jpg',  title:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة', titleEn:'Advanced AI Concepts and Applications', issuer:'SDAIA', year:2025, desc:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.', descEn:'Advanced AI concepts and applications, part of the One Million Saudis in AI initiative.', verify:'' },
+    { cat:'ai', img:'certificate2.jpg',  title:'مبادئ الذكاء الاصطناعي', titleEn:'Principles of Artificial Intelligence', issuer:'SDAIA', year:2025, desc:'المبادئ الأساسية للذكاء الاصطناعي وأدواته، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.', descEn:'Core principles and tools of AI, part of the One Million Saudis in AI initiative.', verify:'' },
+    { cat:'ai', img:'certificate5.jpg',  title:'تطبيقات علم البيانات في القطاع الحكومي', titleEn:'Data Science Applications in Government', issuer:'HADAF × قدراتك', year:2025, hours:4, desc:'تطبيق علم البيانات لتحسين اتخاذ القرار داخل القطاع الحكومي.', descEn:'Applying data science to improve decision-making in the government sector.', verify:'' },
+    { cat:'ai', img:'certificate17.jpg', title:'أمن الذكاء الاصطناعي', titleEn:'AI Security', issuer:'HRDF', year:2026, hours:1, desc:'دورة أمن الذكاء الاصطناعي المقدمة من برنامج التدريب الإلكتروني.', descEn:'AI security course offered through the e-training program.', verify:'' },
 
     // ---- البرمجة والتقنية
-    { cat:'tech', img:'certificate7.jpg',  title:'ساعة برمجة (1)', issuer:'Code.org × Microsoft', year:2023, desc:'برنامج Hour of Code لتعلم أساسيات البرمجة والتفكير المنطقي.' },
-    { cat:'tech', img:'certificate8.jpg',  title:'ساعة برمجة (2)', issuer:'Code.org × Microsoft', year:2023, desc:'المرحلة الثانية من Hour of Code لتعزيز مهارات البرمجة.' },
-    { cat:'tech', img:'certificate9.jpg',  title:'ساعة برمجة (3)', issuer:'Code.org × Microsoft', year:2023, desc:'المرحلة الثالثة من Hour of Code لتطبيق مفاهيم البرمجة عمليًا.' },
-    { cat:'tech', img:'certificate13.jpg', title:'إدارة مشاريع تقنية المعلومات', issuer:'HRDF', year:2026, hours:1, desc:'دورة إدارة مشاريع تقنية المعلومات المقدمة من برنامج التدريب الإلكتروني.' },
+    { cat:'tech', img:'certificate7.jpg',  title:'ساعة برمجة (1)', titleEn:'Hour of Code (1)', issuer:'Code.org × Microsoft', year:2023, desc:'برنامج Hour of Code لتعلم أساسيات البرمجة والتفكير المنطقي.', descEn:'Hour of Code program for learning programming basics and logical thinking.' },
+    { cat:'tech', img:'certificate8.jpg',  title:'ساعة برمجة (2)', titleEn:'Hour of Code (2)', issuer:'Code.org × Microsoft', year:2023, desc:'المرحلة الثانية من Hour of Code لتعزيز مهارات البرمجة.', descEn:'Second stage of Hour of Code to strengthen programming skills.' },
+    { cat:'tech', img:'certificate9.jpg',  title:'ساعة برمجة (3)', titleEn:'Hour of Code (3)', issuer:'Code.org × Microsoft', year:2023, desc:'المرحلة الثالثة من Hour of Code لتطبيق مفاهيم البرمجة عمليًا.', descEn:'Third stage of Hour of Code, applying programming concepts in practice.' },
+    { cat:'tech', img:'certificate13.jpg', title:'إدارة مشاريع تقنية المعلومات', titleEn:'IT Project Management', issuer:'HRDF', year:2026, hours:1, desc:'دورة إدارة مشاريع تقنية المعلومات المقدمة من برنامج التدريب الإلكتروني.', descEn:'IT project management course offered through the e-training program.', verify:'' },
 
     // ---- الأعمال والإدارة
-    { cat:'biz', img:'certificate3.jpg',  title:'دليلك الشامل إلى التجارة الإلكترونية', issuer:'HADAF × منشآت', year:2025, hours:2, desc:'أساسيات التجارة الإلكترونية والتسويق الرقمي.' },
-    { cat:'biz', img:'certificate4.jpg',  title:'التسويق', issuer:'HADAF × بنك التنمية الاجتماعية', year:2025, hours:5, desc:'تطوير مهارات التسويق وتحليل الحملات الإعلانية.' },
-    { cat:'biz', img:'certificate12.jpg', title:'العمل الحر', issuer:'HRDF × بنك التنمية الاجتماعية', year:2026, hours:3, desc:'دورة العمل الحر المقدمة من برنامج التدريب الإلكتروني.' },
-    { cat:'biz', img:'certificate14.jpg', title:'أساسيات الإدارة', issuer:'HRDF', year:2026, hours:2, desc:'دورة أساسيات الإدارة المقدمة من برنامج التدريب الإلكتروني.' },
-    { cat:'biz', img:'certificate15.jpg', title:'إدارة الرياضات الإلكترونية', issuer:'HRDF × HP', year:2026, hours:11, desc:'دورة إدارة الرياضات الإلكترونية المقدمة من برنامج التدريب الإلكتروني.' },
+    { cat:'biz', img:'certificate3.jpg',  title:'دليلك الشامل إلى التجارة الإلكترونية', titleEn:'Your Complete Guide to E-Commerce', issuer:'HADAF × منشآت', year:2025, hours:2, desc:'أساسيات التجارة الإلكترونية والتسويق الرقمي.', descEn:'Fundamentals of e-commerce and digital marketing.' },
+    { cat:'biz', img:'certificate4.jpg',  title:'التسويق', titleEn:'Marketing', issuer:'HADAF × بنك التنمية الاجتماعية', year:2025, hours:5, desc:'تطوير مهارات التسويق وتحليل الحملات الإعلانية.', descEn:'Developing marketing skills and analyzing advertising campaigns.' },
+    { cat:'biz', img:'certificate12.jpg', title:'العمل الحر', titleEn:'Freelancing', issuer:'HRDF × بنك التنمية الاجتماعية', year:2026, hours:3, desc:'دورة العمل الحر المقدمة من برنامج التدريب الإلكتروني.', descEn:'Freelancing course offered through the e-training program.', verify:'' },
+    { cat:'biz', img:'certificate14.jpg', title:'أساسيات الإدارة', titleEn:'Management Fundamentals', issuer:'HRDF', year:2026, hours:2, desc:'دورة أساسيات الإدارة المقدمة من برنامج التدريب الإلكتروني.', descEn:'Management fundamentals course offered through the e-training program.', verify:'' },
+    { cat:'biz', img:'certificate15.jpg', title:'إدارة الرياضات الإلكترونية', titleEn:'Esports Management', issuer:'HRDF × HP', year:2026, hours:11, desc:'دورة إدارة الرياضات الإلكترونية المقدمة من برنامج التدريب الإلكتروني.', descEn:'Esports management course offered through the e-training program.', verify:'' },
 
     // ---- مهارات وأنشطة
-    { cat:'skills', img:'certificate6.jpg',  title:'شهادة شكر وتقدير — ريالي للوعي المالي', issuer:'ريالي × وزارة التعليم', year:2025, desc:'اجتياز برنامج شباب ريالي وإتمام مرحلة الوعي المالي.' },
-    { cat:'skills', img:'certificate10.jpg', title:'المعسكر العالمي للكشافة JOTA-JOTI', issuer:'World Scouts', year:2023, desc:'المشاركة في JOTA-JOTI، الحدث العالمي للكشافة عبر الراديو والإنترنت.' },
-    { cat:'skills', img:'certificate11.jpg', title:'مسابقة المعرفة الإحصائية', issuer:'GASTAT × وزارة التعليم', year:2026, desc:'مشاركة إلكترونية صادرة من الهيئة العامة للإحصاء بالتعاون مع وزارة التعليم.' },
-    { cat:'skills', img:'certificate16.jpg', title:'كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', issuer:'HRDF × British Council', year:2026, hours:1, desc:'كتابة الرسائل الرسمية وخطابات التقديم.' }
+    { cat:'skills', img:'certificate6.jpg',  title:'شهادة شكر وتقدير — ريالي للوعي المالي', titleEn:'Appreciation Certificate — Riyali Financial Literacy', issuer:'ريالي × وزارة التعليم', year:2025, desc:'اجتياز برنامج شباب ريالي وإتمام مرحلة الوعي المالي.', descEn:'Completed the Shabab Riyali program and its financial literacy stage.' },
+    { cat:'skills', img:'certificate10.jpg', title:'المعسكر العالمي للكشافة JOTA-JOTI', titleEn:'JOTA-JOTI World Scout Jamboree', issuer:'World Scouts', year:2023, desc:'المشاركة في JOTA-JOTI، الحدث العالمي للكشافة عبر الراديو والإنترنت.', descEn:'Participation in JOTA-JOTI, the global scouting event over radio and the internet.' },
+    { cat:'skills', img:'certificate11.jpg', title:'مسابقة المعرفة الإحصائية', titleEn:'Statistical Knowledge Competition', issuer:'GASTAT × وزارة التعليم', year:2026, desc:'مشاركة إلكترونية صادرة من الهيئة العامة للإحصاء بالتعاون مع وزارة التعليم.', descEn:'Online participation issued by the General Authority for Statistics with the Ministry of Education.' },
+    { cat:'skills', img:'certificate16.jpg', title:'كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', titleEn:'Writing Formal Emails and Cover Letters', issuer:'HRDF × British Council', year:2026, hours:1, desc:'كتابة الرسائل الرسمية وخطابات التقديم.', descEn:'Writing formal messages and cover letters.', verify:'' },
+    // ---- الشهادات المدرسية
+    { cat:'school', img:'school1.jpg', title:'شهادة الصف الأول الابتدائي', titleEn:'Elementary First Grade Certificate', issuer:'وزارة التعليم', year:2017, desc:'ابتدائية جلمودة — العام الدراسي 1437/1438هـ، ينتقل الطالب بتقدير متفوق في جميع المواد.', descEn:'Jolmodah Elementary School — 2016/2017, promoted with Excellent in all subjects.' },
+    { cat:'school', img:'school2.jpg', title:'شهادة الصف الثاني الابتدائي', titleEn:'Elementary Second Grade Certificate', issuer:'وزارة التعليم', year:2018, desc:'ابتدائية الدفي — العام الدراسي 1438/1439هـ، ينتقل الطالب.', descEn:'Aldeffy Elementary School — 2017/2018, promoted to the next grade.' },
+    { cat:'school', img:'school3.jpg', title:'شهادة الصف الثالث الابتدائي', titleEn:'Elementary Third Grade Certificate', issuer:'وزارة التعليم', year:2019, desc:'ابتدائية المطرفية — العام الدراسي 1439/1440هـ، ينتقل الطالب.', descEn:'Almatrafiah Elementary School — 2018/2019, promoted to the next grade.' },
+    { cat:'school', img:'school4.jpg', title:'شهادة الصف الرابع الابتدائي', titleEn:'Elementary Fourth Grade Certificate', issuer:'وزارة التعليم', year:2020, desc:'ابتدائية المطرفية — العام الدراسي 1440/1441هـ، ناجح وينتقل للصف التالي.', descEn:'Almatrafiah Elementary School — 2019/2020, passed to the next grade.' },
+    { cat:'school', img:'school5.jpg', title:'شهادة الصف الخامس الابتدائي', titleEn:'Elementary Fifth Grade Certificate', issuer:'وزارة التعليم', year:2021, desc:'ابتدائية المطرفية — العام الدراسي 1441/1442هـ، ناجح وينتقل للصف التالي.', descEn:'Almatrafiah Elementary School — 2020/2021, passed to the next grade.' },
+    { cat:'school', img:'school6.jpg', title:'شهادة الصف السادس الابتدائي', titleEn:'Elementary Sixth Grade Certificate', issuer:'وزارة التعليم', year:2022, desc:'ابتدائية المطرفية — العام الدراسي 1442/1443هـ، المعدل 91.48 بتقدير ممتاز.', descEn:'Almatrafiah Elementary School — 2021/2022, GPA 91.48, Excellent.' },
+    { cat:'school', img:'school7.jpg', title:'شهادة الصف الأول المتوسط', titleEn:'Intermediate First Grade Certificate', issuer:'وزارة التعليم', year:2023, desc:'متوسطة الريحان — العام الدراسي 1443/1444هـ، المعدل 88.28 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2022/2023, GPA 88.28, Very Good.' },
+    { cat:'school', img:'school8.jpg', title:'شهادة الصف الثاني المتوسط', titleEn:'Intermediate Second Grade Certificate', issuer:'وزارة التعليم', year:2024, desc:'متوسطة الريحان — العام الدراسي 1444/1445هـ، المعدل 87.39 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2023/2024, GPA 87.39, Very Good.' },
+    { cat:'school', img:'school9.jpg', title:'شهادة الصف الثالث المتوسط', titleEn:'Intermediate Third Grade Certificate', issuer:'وزارة التعليم', year:2025, desc:'متوسطة الريحان — العام الدراسي 1445/1446هـ، المعدل 86.28 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2024/2025, GPA 86.28, Very Good.' },
+    { cat:'school', img:'school10.jpg', title:'شهادة الصف الأول الثانوي', titleEn:'First Secondary Grade Certificate', issuer:'وزارة التعليم', year:2026, desc:'ثانوية الدفي (مسارات) — العام الدراسي 1446/1447هـ، المعدل التراكمي 87.41 بتقدير جيد جدًا مرتفع.', descEn:'Al-Deffy Secondary School — 2025/2026, CGP 87.41, Very Good +.' }
 
-    // ---- الشهادات المدرسية: أضف شهاداتك هنا بنفس الشكل، مثال:
-    // { cat:'school', img:'school1.jpg', title:'شهادة التفوق الدراسي', issuer:'مدرسة ...', year:2025, desc:'تقدير للتفوق في الفصل الدراسي الأول.' },
+    // أضف شهادات مدرسية جديدة بنفس الشكل (cat:'school')
   ];
 
-  /* ===================== المنطق ===================== */
+  /* ===================== اللغة ===================== */
+  const I18N = {
+    ar: { title:'ملف الإنجازات', gateSub:'أدخل بيانات الدخول للاطلاع على الشهادات.', user:'اسم المستخدم', pass:'كلمة المرور', enter:'دخول',
+          heroTitle:'شهادات', heroP:'الشهادات المهنية والمدرسية والأنشطة، مصنّفة في أقسام لسهولة التصفح.',
+          cert:'شهادة', certs:'شهادات', hrs:'ساعة تدريبية', issuers:'جهة مانحة', search:'بحث...',
+          download:'تحميل الشهادة', close:'إغلاق', verify:'تحقق من الشهادة', dlAll:'تحميل الشهادات', pickTitle:'اختر الشهادة', pickSub:'اضغط على الشهادة لتحميلها.', zoom:'تكبير', zoomOut:'تصغير',
+          none:'لا توجد نتائج مطابقة لبحثك.', view:'عرض الشهادة', soon:'سيتم إضافة الشهادات قريبًا',
+          soonHint:'أضف شهاداتك في مصفوفة', soonHint2:'داخل الكود بقيمة',
+          name:'بدر أحمد باشراحيل', brand:'بدر <span>باشراحيل</span>', role:'طالب', age:'العمر', ageVal:'17 سنة',
+          birth:'مكان الميلاد', birthVal:'المملكة العربية السعودية', footer:'© 2026 بدر أحمد باشراحيل — جميع الحقوق محفوظة',
+          wrong:'اسم المستخدم أو كلمة المرور غير صحيحة.', lock30:'محاولات كثيرة. حاول بعد 30 ثانية.',
+          lockN:(n)=>`محاولات كثيرة. انتظر ${n} ثانية.`, nocrypto:'المتصفح لا يدعم التحقق. افتح الصفحة عبر رابط https.',
+          hoursTag:(h)=> h===1?'ساعة':h===2?'ساعتان':h<=10?`${h} ساعات`:`${h} ساعة`, hoursLong:(h)=>`${h} ساعة تدريبية` },
+    en: { title:'Achievements Portfolio', gateSub:'Enter your credentials to view the certificates.', user:'Username', pass:'Password', enter:'Sign in',
+          heroTitle:'Certificates of', heroP:'Professional and school certificates and activities, organized into sections for easy browsing.',
+          cert:'certificate', certs:'certificates', hrs:'training hours', issuers:'issuers', search:'Search...',
+          download:'Download certificate', close:'Close', verify:'Verify certificate', dlAll:'Download certificates', pickTitle:'Choose a certificate', pickSub:'Tap a certificate to download it.', zoom:'Zoom', zoomOut:'Zoom out',
+          none:'No matching results.', view:'View certificate', soon:'Certificates coming soon',
+          soonHint:'Add your certificates to the', soonHint2:'array in the code with',
+          name:'Badr Ahmed Bashraheel', brand:'Badr <span>Bashraheel</span>', role:'Student', age:'Age', ageVal:'17 years',
+          birth:'Place of birth', birthVal:'Saudi Arabia', footer:'© 2026 Badr Ahmed Bashraheel — All rights reserved',
+          wrong:'Incorrect username or password.', lock30:'Too many attempts. Try again in 30 seconds.',
+          lockN:(n)=>`Too many attempts. Wait ${n} seconds.`, nocrypto:'This browser cannot verify. Open the page over https.',
+          hoursTag:(h)=>`${h}h`, hoursLong:(h)=>`${h} training hours` }
+  };
+  const ISSUER_EN = { 'قدراتك':'Qudraty', 'منشآت':"Monsha'at", 'بنك التنمية الاجتماعية':'Social Development Bank', 'ريالي':'Riyali', 'وزارة التعليم':'Ministry of Education' };
+
   const $ = (id) => document.getElementById(id);
+  let lang = 'ar';
+  try { lang = localStorage.getItem('lang') === 'en' ? 'en' : 'ar'; } catch (_) {}
+  const t = (k) => I18N[lang][k];
+  const L = (o, f) => (lang === 'en' && o[f + 'En']) || o[f];
+  const issuerOf = (c) => lang === 'en' ? c.issuer.replace(/[^\s×]+(?:\s[^\s×]+)*/g, (p) => ISSUER_EN[p.trim()] || p) : c.issuer;
   const state = { q: '', visible: [], index: 0 };
   const secOf = (id) => SECTIONS.find(s => s.id === id);
-  const hoursLabel = (h) => h === 1 ? 'ساعة' : h === 2 ? 'ساعتان' : h <= 10 ? `${h} ساعات` : `${h} ساعة`;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 
-  /* Stats */
+  /* ===================== المظهر ===================== */
+  function setTheme(th) {
+    document.documentElement.dataset.theme = th;
+    document.querySelector('meta[name="theme-color"]').content = th === 'light' ? '#f5f7fc' : '#0a0f1e';
+    try { localStorage.setItem('theme', th); } catch (_) {}
+  }
+  let savedTheme = null; try { savedTheme = localStorage.getItem('theme'); } catch (_) {}
+  setTheme(savedTheme || 'dark');
+  $('btnTheme').onclick = () => setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+
+  /* ===================== الإحصاءات ===================== */
   function countUp(el, target) {
     const d = 900, s = performance.now();
     (function tick(now) {
-      const t = Math.min((now - s) / d, 1);
-      el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3)));
-      if (t < 1) requestAnimationFrame(tick);
+      const p = Math.min((now - s) / d, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
     })(s);
   }
   function runStats() {
@@ -469,33 +622,31 @@
     countUp($('statIssuers'), new Set(CERTS.flatMap(c => c.issuer.split('×').map(x => x.trim()))).size);
   }
 
-  /* Nav */
-  $('navLinks').innerHTML = SECTIONS.map(s => `<a href="#${s.id}" data-nav="${s.id}">${s.title}</a>`).join('');
-
-  /* Render */
+  /* ===================== العرض ===================== */
   function render() {
     const q = state.q;
-    const match = (c) => !q || (c.title + ' ' + c.issuer + ' ' + c.year).toLowerCase().includes(q);
+    const match = (c) => !q || (c.title + ' ' + (c.titleEn || '') + ' ' + c.issuer + ' ' + issuerOf(c) + ' ' + c.year).toLowerCase().includes(q);
     state.visible = [];
     let html = '', shown = 0;
 
     SECTIONS.forEach(s => {
       const items = CERTS.filter(c => c.cat === s.id && match(c));
       const total = CERTS.filter(c => c.cat === s.id).length;
-      if (q && !items.length) return;                      // أخفِ القسم الفارغ أثناء البحث
+      if (q && !items.length) return;
       shown += items.length;
 
       const cards = items.map(c => {
         const idx = state.visible.push(c) - 1;
+        const ttl = esc(L(c, 'title'));
         return `
-        <button class="cert" data-i="${idx}" aria-label="عرض ${c.title}">
-          <div class="thumb"><img src="${c.img}" alt="${c.title}" loading="lazy" onerror="this.style.opacity=.15"></div>
+        <button class="cert" data-i="${idx}" aria-label="${ttl}">
+          <div class="thumb" data-view="${esc(t('view'))}"><img src="${c.img}" alt="${ttl}" loading="lazy" onerror="this.style.opacity=.15"></div>
           <div class="body">
-            <h3>${c.title}</h3>
+            <h3>${ttl}</h3>
             <div class="meta">
-              <span class="tag issuer">${c.issuer}</span>
+              <span class="tag issuer">${esc(issuerOf(c))}</span>
               <span class="tag">${c.year}</span>
-              ${c.hours ? `<span class="tag hours">${hoursLabel(c.hours)}</span>` : ''}
+              ${c.hours ? `<span class="tag hours">${t('hoursTag')(c.hours)}</span>` : ''}
             </div>
           </div>
         </button>`;
@@ -503,16 +654,16 @@
 
       const empty = !total ? `
         <div class="placeholder">
-          <b>سيتم إضافة الشهادات قريبًا</b>
-          أضف شهاداتك في مصفوفة <code>CERTS</code> داخل الكود بقيمة <code>cat:'${s.id}'</code>
+          <b>${t('soon')}</b>
+          ${t('soonHint')} <code>CERTS</code> ${t('soonHint2')} <code>cat:'${s.id}'</code>
         </div>` : '';
 
       html += `
       <section class="section" id="${s.id}" style="--c:${s.color}">
         <div class="section-head">
           <div class="section-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.icon}</svg></div>
-          <div><h2>${s.title}</h2><p>${s.desc}</p></div>
-          <span class="count">${total} ${total === 1 ? 'شهادة' : 'شهادات'}</span>
+          <div><h2>${L(s, 'title')}</h2><p>${L(s, 'desc')}</p></div>
+          <span class="count">${total} ${total === 1 ? t('cert') : t('certs')}</span>
         </div>
         <div class="certs">${cards}${empty}</div>
       </section>`;
@@ -522,6 +673,37 @@
     $('noResults').style.display = q && !shown ? 'block' : 'none';
     observe();
   }
+
+  function setLang(l) {
+    lang = l;
+    try { localStorage.setItem('lang', l); } catch (_) {}
+    const root = document.documentElement;
+    root.lang = l; root.dir = l === 'ar' ? 'rtl' : 'ltr';
+    document.title = t('title');
+    $('btnLang').textContent = l === 'ar' ? 'EN' : 'عربي';
+    $('search').placeholder = t('search');
+    $('btnDownload').textContent = t('download');
+    $('btnClose2').textContent = t('close');
+    $('btnVerify').textContent = t('verify');
+    $('btnZoom').textContent = t('zoom');
+    $('lbIn').setAttribute('aria-label', t('zoom'));
+    $('lbOut').setAttribute('aria-label', t('zoomOut'));
+    $('noResults').textContent = t('none');
+    $('heroTitle').textContent = t('heroTitle');
+    $('heroName').textContent = t('name');
+    $('lblCount').textContent = t('certs');
+    $('brand').innerHTML = t('brand');
+    $('footer').textContent = t('footer');
+    $('btnClose').setAttribute('aria-label', t('close'));
+    $('profileClose').setAttribute('aria-label', t('close'));
+    document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+    $('navLinks').innerHTML = SECTIONS.map(s => `<a href="#${s.id}" data-nav="${s.id}">${L(s, 'title')}</a>`).join('');
+    render();
+    if ($('modal').classList.contains('active')) openModal(state.index);
+    if ($('profileModal').classList.contains('active')) openProfile();
+    if ($('pickModal').classList.contains('active')) renderPicker();
+  }
+  $('btnLang').onclick = () => setLang(lang === 'ar' ? 'en' : 'ar');
 
   $('search').addEventListener('input', (e) => { state.q = e.target.value.trim().toLowerCase(); render(); });
   $('main').addEventListener('click', (e) => {
@@ -537,64 +719,114 @@
       entries.forEach(en => {
         if (en.isIntersecting) {
           document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === en.target.id));
+          const act = document.querySelector('[data-nav].active'), nav = $('navLinks');
+          if (act) {                                   // اجعل الرابط النشط ظاهرًا كاملًا في الشريط
+            const a = act.getBoundingClientRect(), n = nav.getBoundingClientRect();
+            if (a.right > n.right) nav.scrollBy({ left: a.right - n.right + 8, behavior: 'smooth' });
+            else if (a.left < n.left) nav.scrollBy({ left: a.left - n.left - 8, behavior: 'smooth' });
+          }
         }
       });
     }, { rootMargin: '-35% 0px -60% 0px' });
     document.querySelectorAll('.section').forEach(s => io.observe(s));
   }
 
-  /* Modal */
+  /* ===================== النافذة ===================== */
   function openModal(i) {
+    if (!state.visible.length) return;
     state.index = (i + state.visible.length) % state.visible.length;
     const c = state.visible[state.index];
     $('modalImg').src = c.img;
-    $('modalImg').alt = c.title;
-    $('modalTitle').textContent = c.title;
-    $('modalInfo').textContent = c.desc || '';
+    $('modalImg').alt = L(c, 'title');
+    $('modalTitle').textContent = L(c, 'title');
+    $('modalInfo').textContent = L(c, 'desc') || '';
     $('modalMeta').innerHTML =
-      `<span class="tag issuer">${c.issuer}</span><span class="tag">${c.year}</span>` +
-      (c.hours ? `<span class="tag hours">${c.hours} ساعة تدريبية</span>` : '') +
-      `<span class="tag">${secOf(c.cat).title}</span>`;
+      `<span class="tag issuer">${esc(issuerOf(c))}</span><span class="tag">${c.year}</span>` +
+      (c.hours ? `<span class="tag hours">${t('hoursLong')(c.hours)}</span>` : '') +
+      `<span class="tag">${L(secOf(c.cat), 'title')}</span>`;
     $('counter').textContent = `${state.index + 1} / ${state.visible.length}`;
+    const v = $('btnVerify');
+    v.hidden = !c.verify;
+    if (c.verify) v.href = c.verify;
     $('modal').classList.add('active');
     document.body.classList.add('locked');
   }
   function closeModal() { $('modal').classList.remove('active'); document.body.classList.remove('locked'); }
-  function downloadCert() {
-    const c = state.visible[state.index];
+  function downloadFile(c) {
     const a = document.createElement('a');
     a.href = c.img;
-    a.download = `${c.title}.${c.img.split('.').pop()}`;
+    a.download = `${L(c, 'title')}.${c.img.split('.').pop()}`;
     document.body.appendChild(a); a.click(); a.remove();
   }
+  const downloadCert = () => downloadFile(state.visible[state.index]);
   $('btnClose').onclick = $('btnClose2').onclick = closeModal;
   $('btnDownload').onclick = downloadCert;
   $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) closeModal(); });
   document.addEventListener('keydown', (e) => {
     if (!$('modal').classList.contains('active')) return;
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape' && !$('lightbox').classList.contains('active')) closeModal();
+  });
+
+  /* ===================== اختيار الشهادة للتحميل ===================== */
+  function renderPicker() {
+    $('pickList').innerHTML = SECTIONS.map(s => {
+      const items = CERTS.map((c, k) => [c, k]).filter(([c]) => c.cat === s.id);
+      if (!items.length) return '';
+      return `<div class="pick-sec">${L(s, 'title')}</div>` + items.map(([c, k]) =>
+        `<button class="pick-item" type="button" data-k="${k}"><span>${esc(L(c, 'title'))} · ${c.year}</span><span class="pick-dl">↓</span></button>`).join('');
+    }).join('');
+  }
+  function openPicker() { renderPicker(); $('pickModal').classList.add('active'); document.body.classList.add('locked'); }
+  function closePicker() { $('pickModal').classList.remove('active'); document.body.classList.remove('locked'); }
+  $('btnDownloadAll').onclick = openPicker;
+  $('pickClose').onclick = closePicker;
+  $('pickModal').addEventListener('click', (e) => { if (e.target === $('pickModal')) closePicker(); });
+  $('pickList').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-k]');
+    if (!b) return;
+    downloadFile(CERTS[+b.dataset.k]);
+    b.classList.add('done'); b.querySelector('.pick-dl').textContent = '✓';
+  });
+
+  /* ===================== تكبير الشهادة ===================== */
+  let zoom = 1;
+  function applyZoom() {
+    const img = $('lbImg');
+    img.className = zoom === 1 ? 'fit' : 'zoomed';
+    img.style.width = zoom === 1 ? '' : (zoom * 100) + '%';
+    $('lbPct').textContent = Math.round(zoom * 100) + '%';
+  }
+  function openLightbox() {
+    const c = state.visible[state.index];
+    if (!c) return;
+    $('lbImg').src = c.img; $('lbImg').alt = L(c, 'title');
+    zoom = 1; applyZoom();
+    $('lbStage').scrollTo(0, 0);
+    $('lightbox').classList.add('active');
+  }
+  function closeLightbox() { $('lightbox').classList.remove('active'); }
+  $('btnZoom').onclick = openLightbox;
+  $('lbClose').onclick = closeLightbox;
+  $('lbIn').onclick = () => { zoom = Math.min(4, zoom + 0.5); applyZoom(); };
+  $('lbOut').onclick = () => { zoom = Math.max(1, zoom - 0.5); applyZoom(); };
+  $('lbImg').onclick = () => { zoom = zoom === 1 ? 2.5 : 1; applyZoom(); };
+  $('lightbox').addEventListener('keydown', () => {});
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if ($('lightbox').classList.contains('active')) closeLightbox();
+    else if ($('pickModal').classList.contains('active')) closePicker();
   });
 
   /* ===================== الملف الشخصي ===================== */
-  const PROFILE = {
-    name: 'بدر أحمد باشراحيل',
-    initial: 'ب',
-    role: 'طالب',
-    age: 17,
-    birthplace: 'المملكة العربية السعودية'
-    // لإضافة صف جديد: أضف في profileRows() سطرًا مثل: rows.push({ label: 'اللغات', value: 'العربية، الإنجليزية' });
-  };
+  const PROFILE = { initial: 'ب' };
 
-  function profileRows() {
-    const rows = [];
-    if (PROFILE.age)        rows.push({ label: 'العمر', value: PROFILE.age + ' سنة' });
-    if (PROFILE.birthplace) rows.push({ label: 'مكان الميلاد', value: PROFILE.birthplace });
-    return rows;
-  }
   function openProfile() {
-    $('pName').textContent = PROFILE.name;
-    $('pRole').textContent = PROFILE.role;
-    $('pRows').innerHTML = profileRows().map(r => `<div class="p-row"><span>${r.label}</span><b>${r.value}</b></div>`).join('');
+    $('pName').textContent = t('name');
+    $('pRole').textContent = t('role');
+    $('pRows').innerHTML = [
+      { label: t('age'), value: t('ageVal') }
+      // لإضافة صف جديد: أضف { label: '...', value: '...' }
+    ].map(r => `<div class="p-row"><span>${r.label}</span><b>${r.value}</b></div>`).join('');
     $('profileModal').classList.add('active');
     document.body.classList.add('locked');
   }
@@ -622,7 +854,7 @@
   }
   function unlock() {
     document.body.classList.remove('gated');
-    document.title = 'ملف الإنجازات';
+    document.title = t('title');
     runStats();
     render();
   }
@@ -636,18 +868,18 @@
     e.preventDefault();
     const now = Date.now();
     if (now < lockedUntil) {
-      showError(`محاولات كثيرة. انتظر ${Math.ceil((lockedUntil - now) / 1000)} ثانية.`);
+      showError(t('lockN')(Math.ceil((lockedUntil - now) / 1000)));
       return;
     }
     if (!(window.crypto && crypto.subtle)) {
-      showError('المتصفح لا يدعم التحقق. افتح الصفحة عبر رابط https.');
+      showError(t('nocrypto'));
       return;
     }
     $('gBtn').disabled = true;
     const user = $('gUser').value.trim().toLowerCase();
     const pass = $('gPass').value.trim();
     const hash = await sha256(user + ':' + pass);
-    await new Promise(r => setTimeout(r, 500));            // تأخير بسيط ضد التخمين السريع
+    await new Promise(r => setTimeout(r, 500));
     $('gBtn').disabled = false;
 
     if (hash === AUTH_HASH) {
@@ -656,10 +888,12 @@
     } else {
       failed++;
       $('gPass').value = '';
-      if (failed >= 5) { lockedUntil = Date.now() + 30000; failed = 0; showError('محاولات كثيرة. حاول بعد 30 ثانية.'); }
-      else showError('اسم المستخدم أو كلمة المرور غير صحيحة.');
+      if (failed >= 5) { lockedUntil = Date.now() + 30000; failed = 0; showError(t('lock30')); }
+      else showError(t('wrong'));
     }
   });
+
+  setLang(lang);
 
   let remembered = false;
   try { remembered = sessionStorage.getItem(SESSION_KEY) === '1'; } catch (_) {}
