@@ -276,19 +276,50 @@
     .icon-btn:hover { background: rgba(255,255,255,.2); }
     .close { left: 14px; }
     .counter { position: absolute; top: 20px; right: 20px; font-size: 13px; color: var(--muted); }
-    .nav { top: 34%; width: 42px; height: 42px; font-size: 20px; }
-    .nav.prev { right: 14px; }
-    .nav.next { left: 14px; }
+
+    /* ===== Profile avatar + card ===== */
+    .profile-btn {
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+      padding: 4px 4px 4px 14px;
+      color: inherit; cursor: pointer;
+      background: none; border: 1px solid transparent; border-radius: 999px;
+      transition: .2s;
+    }
+    .profile-btn:hover, .profile-btn:focus-visible { background: rgba(255,255,255,.05); border-color: var(--border); outline: none; }
+    .avatar {
+      width: 38px; height: 38px; flex-shrink: 0;
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 18px; color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px rgba(91,140,255,.35);
+    }
+    .avatar.lg { width: 88px; height: 88px; font-size: 40px; margin: 6px auto 14px; box-shadow: 0 0 0 4px rgba(91,140,255,.25); }
+    .profile-card { width: min(420px, 100%); }
+    .profile-card h3 { margin: 0 0 8px; font-size: 22px; }
+    .p-role {
+      display: inline-block; padding: 4px 14px; font-size: 13px; font-weight: 600;
+      color: var(--accent-2); background: rgba(34,211,166,.1);
+      border: 1px solid rgba(34,211,166,.3); border-radius: 999px;
+    }
+    .p-rows { display: grid; gap: 10px; margin-top: 20px; text-align: right; }
+    .p-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+      padding: 12px 14px;
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    }
+    .p-row span { color: var(--muted); font-size: 13.5px; white-space: nowrap; }
+    .p-row b { font-size: 15px; font-weight: 700; text-align: left; }
 
     @media (max-width: 760px) {
       .brand { display: none; }
+      .profile-btn { padding: 0; }
       .search { width: 150px; }
       .hero { padding: 50px 16px 38px; }
       .stat { min-width: 100px; padding: 12px 14px; }
       .stat b { font-size: 22px; }
       .section-head h2 { font-size: 20px; }
       .section-head p { display: none; }
-      .nav { top: 28%; }
     }
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
   </style>
@@ -313,7 +344,10 @@
 
 <nav class="topbar">
   <div class="topbar-inner">
-    <div class="brand">بدر <span>باشراحيل</span></div>
+    <button class="profile-btn" id="btnProfile" type="button" aria-label="عرض المعلومات الشخصية">
+      <span class="avatar" data-avatar></span>
+      <span class="brand">بدر <span>باشراحيل</span></span>
+    </button>
     <div class="nav-links" id="navLinks"></div>
     <label class="search">
       <input type="search" id="search" placeholder="بحث..." aria-label="بحث" />
@@ -342,8 +376,6 @@
   <div class="modal-content">
     <button class="icon-btn close" id="btnClose" aria-label="إغلاق">✕</button>
     <span class="counter" id="counter"></span>
-    <button class="icon-btn nav prev" id="btnPrev" aria-label="السابقة">›</button>
-    <button class="icon-btn nav next" id="btnNext" aria-label="التالية">‹</button>
     <div class="modal-img-wrap"><img id="modalImg" alt="" /></div>
     <h3 id="modalTitle"></h3>
     <div class="modal-meta" id="modalMeta"></div>
@@ -352,6 +384,16 @@
       <button class="btn primary" id="btnDownload">تحميل الشهادة</button>
       <button class="btn" id="btnClose2">إغلاق</button>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="pName">
+  <div class="modal-content profile-card">
+    <button class="icon-btn close" id="profileClose" aria-label="إغلاق">✕</button>
+    <div class="avatar lg" data-avatar></div>
+    <h3 id="pName"></h3>
+    <span class="p-role" id="pRole"></span>
+    <div class="p-rows" id="pRows"></div>
   </div>
 </div>
 
@@ -514,8 +556,6 @@
       (c.hours ? `<span class="tag hours">${c.hours} ساعة تدريبية</span>` : '') +
       `<span class="tag">${secOf(c.cat).title}</span>`;
     $('counter').textContent = `${state.index + 1} / ${state.visible.length}`;
-    const multi = state.visible.length > 1;
-    $('btnPrev').style.display = $('btnNext').style.display = multi ? 'grid' : 'none';
     $('modal').classList.add('active');
     document.body.classList.add('locked');
   }
@@ -529,14 +569,45 @@
   }
   $('btnClose').onclick = $('btnClose2').onclick = closeModal;
   $('btnDownload').onclick = downloadCert;
-  $('btnPrev').onclick = () => openModal(state.index - 1);
-  $('btnNext').onclick = () => openModal(state.index + 1);
   $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) closeModal(); });
   document.addEventListener('keydown', (e) => {
     if (!$('modal').classList.contains('active')) return;
     if (e.key === 'Escape') closeModal();
-    if (e.key === 'ArrowLeft') openModal(state.index + 1);
-    if (e.key === 'ArrowRight') openModal(state.index - 1);
+  });
+
+  /* ===================== الملف الشخصي ===================== */
+  const PROFILE = {
+    name: 'بدر أحمد باشراحيل',
+    initial: 'ب',
+    role: 'طالب',
+    age: 17,
+    birthplace: 'المملكة العربية السعودية'
+    // لإضافة صف جديد: أضف في profileRows() سطرًا مثل: rows.push({ label: 'اللغات', value: 'العربية، الإنجليزية' });
+  };
+
+  function profileRows() {
+    const rows = [];
+    if (PROFILE.age)        rows.push({ label: 'العمر', value: PROFILE.age + ' سنة' });
+    if (PROFILE.birthplace) rows.push({ label: 'مكان الميلاد', value: PROFILE.birthplace });
+    return rows;
+  }
+  function openProfile() {
+    $('pName').textContent = PROFILE.name;
+    $('pRole').textContent = PROFILE.role;
+    $('pRows').innerHTML = profileRows().map(r => `<div class="p-row"><span>${r.label}</span><b>${r.value}</b></div>`).join('');
+    $('profileModal').classList.add('active');
+    document.body.classList.add('locked');
+  }
+  function closeProfile() {
+    $('profileModal').classList.remove('active');
+    document.body.classList.remove('locked');
+  }
+  document.querySelectorAll('[data-avatar]').forEach(el => { el.textContent = PROFILE.initial; });
+  $('btnProfile').onclick = openProfile;
+  $('profileClose').onclick = closeProfile;
+  $('profileModal').addEventListener('click', (e) => { if (e.target === $('profileModal')) closeProfile(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && $('profileModal').classList.contains('active')) closeProfile();
   });
 
   /* ===================== بوابة الدخول ===================== */
