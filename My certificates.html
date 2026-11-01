@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>شهاداتي | Abu Ahmed</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Tahoma', Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    header {
+      padding: 40px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #1e293b, #020617);
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+    }
+
+    header p {
+      margin: 0;
+      color: #94a3b8;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .certs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .cert {
+      background: #1a1f38;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+      cursor: default;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .cert:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      background: linear-gradient(145deg, #1f2937, #111827);
+    }
+
+    .cert img.cert-img {
+      width: 100%;
+      border-radius: 16px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .cert img.cert-img:hover {
+      transform: scale(1.05);
+    }
+
+    .cert-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .cert-info .logo {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .cert-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      display: none;
+      margin-top: 6px;
+    }
+    .cert:hover .cert-desc {
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #020617;
+      border-radius: 20px;
+      max-width: 90%;
+      max-height: 90%;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      overflow-y: auto;
+      position: relative;
+      text-align: center;
+    }
+
+    .modal-content img {
+      max-width: 70vw;
+      max-height: 60vh;
+      object-fit: contain;
+      border-radius: 14px;
+      margin-bottom: 15px;
+      image-rendering: -webkit-optimize-contrast;
+    }
+
+    .modal-content h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      color: #f3f4f6;
+    }
+
+    .modal-content p {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .close {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ef4444;
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 10;
+      user-select: none;
+    }
+
+    .close:hover {
+      background: #dc2626;
+      transform: scale(1.1);
+    }
+
+    .download-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #3b82f6;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      user-select: none;
+    }
+
+    .download-btn:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+    }
+    .cert img {
+  width: 100%;          /* كامل عرض البطاقة */
+  height: 180px;        /* ارتفاع ثابت */
+  object-fit: cover;    /* تقص الصورة لتتناسب مع البطاقة */
+  border-radius: 12px;
+  display: block;
+}
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>شهاداتي</h1>
+  <p>عرض جميع الشهادات والإنجازات الخاصة بي</p>
+</header>
+
+<div class="container">
+  <div class="certs">
+
+    <div class="cert" onclick="openModal('certificate1.jpg', 'شهادة مفاهيم الذكاء الاصطناعي', 'مقدمة لفهم أساسيات الذكاء الاصطناعي وتطبيقاته العملية.')">
+      <img src="certificate1.jpg" alt="شهادة مفاهيم الذكاء الاصطناعي">
+      <h3>شهادة مفاهيم الذكاء الاصطناعي</h3>
+      <span>SDAIA • 2025</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate2.jpg', 'شهادة مبادئ الذكاء الاصطناعي', 'تركز على المبادئ الأساسية للذكاء الاصطناعي وأدواته.')">
+      <img src="certificate2.jpg" alt="شهادة مبادئ الذكاء الاصطناعي">
+      <h3>شهادة مبادئ الذكاء الاصطناعي</h3>
+      <span>SDAIA • 2025</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate3.jpg', 'دليل شامل للتجارة الالكترونية', 'برنامج تدريبي لتعلم التجارة الإلكترونية والتسويق الرقمي.')">
+      <img src="certificate3.jpg" alt="دليل شامل للتجارة الالكترونية">
+      <h3>دليل شامل للتجارة الالكترونية</h3>
+      <span>HADAF • 2025</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate4.jpg', 'شهادة التسويق', 'تطوير مهارات التسويق الرقمي وتحليل الحملات الإعلانية.')">
+      <img src="certificate4.jpg" alt="شهادة التسويق">
+      <h3>شهادة التسويق</h3>
+      <span>HADAF • 2025</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate5.jpg', 'شهادة تطبيقات علم البينات في القطاع الحكومي', 'تطبيق علم البيانات لتحسين اتخاذ القرار داخل القطاع الحكومي.')">
+      <img src="certificate5.jpg" alt="شهادة تطبيقات علم البينات في القطاع الحكومي">
+      <h3>شهادة تطبيقات علم البينات في القطاع الحكومي</h3>
+      <span>HADAF • 2025</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate6.jpg', 'شهادة ريالي للوعي المالي', 'برنامج توعية مالية لتعليم التخطيط المالي وإدارة الميزانية.')">
+      <img src="certificate6.jpg" alt="شهادة ريالي للوعي المالي">
+      <h3>شهادة ريالي للوعي المالي</h3>
+      <span>Riyali × MOE • 2025</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate7.jpg', 'شهادة ساعة برمجة 1', 'برنامج Hour of Code لتعلم أساسيات البرمجة والتفكير المنطقي.')">
+      <img src="certificate7.jpg" alt="شهادة ساعة برمجة 1">
+      <h3>شهادة ساعة برمجة 1</h3>
+      <span>Microsoft • 2023</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate8.jpg', 'شهادة ساعة برمجة 2', 'المرحلة الثانية من Hour of Code لتعزيز مهارات البرمجة.')">
+      <img src="certificate8.jpg" alt="شهادة ساعة برمجة 2">
+      <h3>شهادة ساعة برمجة 2</h3>
+      <span>Microsoft • 2023</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate9.jpg', 'شهادة ساعة برمجة 3', 'المرحلة النهائية من Hour of Code لتطبيق مفاهيم البرمجة بشكل عملي.')">
+      <img src="certificate9.jpg" alt="شهادة ساعة برمجة 3">
+      <h3>شهادة ساعة برمجة 3</h3>
+      <span>Microsoft • 2023</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate10.jpg', 'شهادة المعسكر العالمي للكشافة', 'المشاركة في JOTA-JOTI، الحدث العالمي للكشافة عبر الإنترنت.')">
+      <img src="certificate10.jpg" alt="شهادة المعسكر العالمي للكشافة">
+      <h3>شهادة المعسكر العالمي للكشافة</h3>
+      <span>Jota Joti • 2023</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate11.jpg', 'شهادة مسابقة المعرفة الإحصائية', '  مشاركة إلكترونية صادرة من الهيئة العامة للإحصاء بالتعاون مع وزارة التعليم.')">
+      <img src="certificate11.jpg" alt="شهادة مسابقة المعرفة الإحصائية">
+      <h3>شهادة مسابقة المعرفة الإحصائية</h3>
+      <span> GASTAT × MOE • 2026</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate12.jpg', 'شهادة إتمام دورة العمل الحر', 'شهادة إتمام دورة العمل الحر المقدمة من برنامج التدريب الإلكتروني، بواقع 3 ساعات تدريبية.')">
+      <img src="certificate12.jpg" alt="شهادة إتمام دورة العمل الحر">
+      <h3>شهادة إتمام دورة العمل الحر</h3>
+      <span>HRDF × SDB • 2026</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate13.jpg', 'شهادة إتمام دورة إدارة مشاريع تقنية المعلومات', 'شهادة إتمام دورة إدارة مشاريع تقنية المعلومات المقدمة من برنامج التدريب الإلكتروني، بواقع ساعة تدريبية واحدة.')">
+      <img src="certificate13.jpg" alt="شهادة إتمام دورة إدارة مشاريع تقنية المعلومات">
+      <h3>شهادة إتمام دورة إدارة مشاريع تقنية المعلومات</h3>
+      <span>HRDF • IT Project Management • 2026</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate14.jpg', 'شهادة إتمام دورة أساسيات الإدارة', 'شهادة إتمام دورة أساسيات الإدارة المقدمة من برنامج التدريب الإلكتروني، بواقع ساعتين تدريبيتين.')">
+      <img src="certificate14.jpg" alt="شهادة إتمام دورة أساسيات الإدارة">
+      <h3>شهادة إتمام دورة أساسيات الإدارة</h3>
+      <span>HRDF • 2026</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate15.jpg', 'شهادة إتمام دورة إدارة الرياضات الإلكترونية', 'شهادة إتمام دورة إدارة الرياضات الإلكترونية المقدمة من برنامج التدريب الإلكتروني، بواقع 11 ساعة تدريبية.')">
+      <img src="certificate15.jpg" alt="شهادة إتمام دورة إدارة الرياضات الإلكترونية">
+      <h3>شهادة إتمام دورة إدارة الرياضات الإلكترونية</h3>
+      <span>HRDF × HP • 2026</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate16.jpg', 'شهادة إتمام دورة كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', 'شهادة إتمام دورة كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم المقدمة من برنامج التدريب الإلكتروني، بواقع ساعة تدريبية واحدة.')">
+      <img src="certificate16.jpg" alt="شهادة إتمام دورة كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم">
+      <h3>شهادة إتمام دورة كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم</h3>
+      <span>HRDF × British Council • 2026</span>
+    </div>
+
+    <div class="cert" onclick="openModal('certificate17.jpg', 'شهادة إتمام دورة أمن الذكاء الاصطناعي', 'شهادة إتمام دورة أمن الذكاء الاصطناعي المقدمة من برنامج التدريب الإلكتروني، بواقع ساعة تدريبية واحدة.')">
+      <img src="certificate17.jpg" alt="شهادة إتمام دورة أمن الذكاء الاصطناعي">
+      <h3>شهادة إتمام دورة أمن الذكاء الاصطناعي</h3>
+      <span>HRDF • IT Project Management • 2026</span>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<footer>
+  © 2026 Abu Ahmed – جميع الحقوق محفوظة
+</footer>
+
+<div class="modal" id="modal" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="close" onclick="closeModal()"><span>✕</span> إغلاق</div>
+    <img id="modalImg" src="" />
+    <h3 id="modalTitle"></h3>
+    <p id="modalInfo"></p>
+    <button class="download-btn" onclick="downloadCert()">تحميل الشهادة</button>
+  </div>
+</div>
+
+<script>
+  function openModal(img, title, info){
+  document.getElementById('modalImg').src = img;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalInfo').textContent = info || ''; // لو info فاضي يعرض فراغ
+  document.getElementById('modal').classList.add('active');
+}
+
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+  }
+
+  function downloadCert() {
+    const imgSrc = document.getElementById('modalImg').src;
+    const link = document.createElement('a');
+    link.href = imgSrc;
+    link.download = "Certificate";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+</script>
+
+</body>
+</html>
