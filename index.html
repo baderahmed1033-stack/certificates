@@ -12,8 +12,13 @@
   <meta property="og:title" content="ملف الإنجازات" />
   <meta property="og:description" content="الشهادات المهنية والأنشطة." />
   <meta property="og:image" content="https://YOUR-SITE.com/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="ملف الإنجازات" />
   <meta property="og:url" content="https://YOUR-SITE.com/" />
   <meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235b8cff'/%3E%3Cstop offset='1' stop-color='%2322d3a6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M32 14 11 25l21 11 21-11z' fill='%23fff'/%3E%3Cpath d='M20 33v10c7 5 17 5 24 0V33l-12 6z' fill='%23fff'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <meta name="theme-color" content="#0a0f1e" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -217,7 +222,7 @@
       border-radius: 999px; white-space: nowrap;
     }
 
-    .certs { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 22px; }
+    .certs { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(280px,100%),1fr)); gap: 22px; }
     .cert {
       display: flex; flex-direction: column; padding: 0;
       text-align: start; color: inherit; cursor: pointer;
@@ -286,7 +291,7 @@
     @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
     .modal-content {
       position: relative; width: min(960px,100%); max-height: 94vh; overflow-y: auto;
-      padding: 22px; text-align: center;
+      padding: 58px 22px 22px; text-align: center;
       background: var(--bg-soft);
       border: 1px solid var(--border); border-radius: 22px;
       box-shadow: 0 30px 80px rgba(0,0,0,.6);
@@ -315,7 +320,6 @@
     }
     .icon-btn:hover { background: rgba(255,255,255,.2); }
     .close { inset-inline-start: 14px; }
-    .counter { position: absolute; top: 20px; inset-inline-end: 20px; font-size: 13px; color: var(--muted); }
 
     /* ===== Profile avatar + card ===== */
     .profile-btn {
@@ -384,16 +388,37 @@
 
     @media (max-width: 1150px) { .brand { display: none; } .search { width: 140px; } }
     @media (max-width: 760px) {
-      .brand { display: none; }
-      .profile-btn { padding: 0 !important; }
-      .search { width: 120px; }
-      .topbar-inner { padding: 0 12px; gap: 8px; }
-      .hero { padding: 50px 16px 38px; }
-      .stat { min-width: 100px; padding: 12px 14px; }
-      .stat b { font-size: 22px; }
-      .section-head h2 { font-size: 20px; }
+      :root { --nav-h: 100px; }
+      .topbar { height: auto; }
+      .topbar-inner { height: auto; flex-wrap: wrap; padding: 8px 12px 4px; gap: 8px; }
+      .profile-btn { order: 0; padding: 0 !important; }
+      .search { order: 1; flex: 1; width: auto; min-width: 0; }
+      #btnTheme { order: 2; } #btnLang { order: 3; }
+      .nav-links { order: 4; flex: 0 0 100%; padding-bottom: 4px; }
+      .nav-links a { padding: 7px 12px; }
+      .hero { padding: 36px 16px 30px; }
+      .hero p { font-size: 15px; }
+      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 24px; }
+      .stat { min-width: 0; padding: 10px 6px; border-radius: 14px; }
+      .stat b { font-size: 21px; }
+      .stat span { font-size: 12px; }
+      .container { padding: 8px 14px 40px; }
+      .section { padding-top: 30px; }
+      .section-head { gap: 12px; margin-bottom: 18px; }
+      .section-head > div:nth-child(2) { flex: 1; min-width: 0; }
+      .section-icon { width: 42px; height: 42px; border-radius: 12px; }
+      .section-head h2 { font-size: 18px; }
       .section-head p { display: none; }
+      .count { font-size: 12px; padding: 3px 9px; }
+      .certs { gap: 16px; }
+      .modal { padding: 10px; }
+      .modal-content { padding: 54px 14px 16px; border-radius: 18px; }
+      .modal-content h3 { font-size: 19px; }
+      .modal-content img { max-height: 52vh; }
+      .actions .btn { flex: 1 1 40%; text-align: center; padding: 10px 12px; }
+      .gate-card { padding: 28px 20px 22px; }
     }
+    @media (hover: none) { .cert:hover { transform: none; } .cert:hover .thumb img { transform: none; } }
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
 
   </style>
@@ -454,7 +479,6 @@
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-content">
     <button class="icon-btn close" id="btnClose" aria-label="إغلاق">✕</button>
-    <span class="counter" id="counter"></span>
     <div class="modal-img-wrap"><img id="modalImg" alt="" /></div>
     <h3 id="modalTitle"></h3>
     <div class="modal-meta" id="modalMeta"></div>
@@ -546,16 +570,16 @@
     { cat:'skills', img:'certificate11.jpg', title:'مسابقة المعرفة الإحصائية', titleEn:'Statistical Knowledge Competition', issuer:'GASTAT × وزارة التعليم', year:2026, desc:'مشاركة إلكترونية صادرة من الهيئة العامة للإحصاء بالتعاون مع وزارة التعليم.', descEn:'Online participation issued by the General Authority for Statistics with the Ministry of Education.' },
     { cat:'skills', img:'certificate16.jpg', title:'كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', titleEn:'Writing Formal Emails and Cover Letters', issuer:'HRDF × British Council', year:2026, hours:1, desc:'كتابة الرسائل الرسمية وخطابات التقديم.', descEn:'Writing formal messages and cover letters.', verify:'' },
     // ---- الشهادات المدرسية
-    { cat:'school', img:'school1.jpg', title:'شهادة الصف الأول الابتدائي', titleEn:'Elementary First Grade Certificate', issuer:'وزارة التعليم', year:2017, desc:'ابتدائية جلمودة — العام الدراسي 1437/1438هـ، ينتقل الطالب بتقدير متفوق في جميع المواد.', descEn:'Jolmodah Elementary School — 2016/2017, promoted with Excellent in all subjects.' },
-    { cat:'school', img:'school2.jpg', title:'شهادة الصف الثاني الابتدائي', titleEn:'Elementary Second Grade Certificate', issuer:'وزارة التعليم', year:2018, desc:'ابتدائية الدفي — العام الدراسي 1438/1439هـ، ينتقل الطالب.', descEn:'Aldeffy Elementary School — 2017/2018, promoted to the next grade.' },
-    { cat:'school', img:'school3.jpg', title:'شهادة الصف الثالث الابتدائي', titleEn:'Elementary Third Grade Certificate', issuer:'وزارة التعليم', year:2019, desc:'ابتدائية المطرفية — العام الدراسي 1439/1440هـ، ينتقل الطالب.', descEn:'Almatrafiah Elementary School — 2018/2019, promoted to the next grade.' },
-    { cat:'school', img:'school4.jpg', title:'شهادة الصف الرابع الابتدائي', titleEn:'Elementary Fourth Grade Certificate', issuer:'وزارة التعليم', year:2020, desc:'ابتدائية المطرفية — العام الدراسي 1440/1441هـ، ناجح وينتقل للصف التالي.', descEn:'Almatrafiah Elementary School — 2019/2020, passed to the next grade.' },
-    { cat:'school', img:'school5.jpg', title:'شهادة الصف الخامس الابتدائي', titleEn:'Elementary Fifth Grade Certificate', issuer:'وزارة التعليم', year:2021, desc:'ابتدائية المطرفية — العام الدراسي 1441/1442هـ، ناجح وينتقل للصف التالي.', descEn:'Almatrafiah Elementary School — 2020/2021, passed to the next grade.' },
-    { cat:'school', img:'school6.jpg', title:'شهادة الصف السادس الابتدائي', titleEn:'Elementary Sixth Grade Certificate', issuer:'وزارة التعليم', year:2022, desc:'ابتدائية المطرفية — العام الدراسي 1442/1443هـ، المعدل 91.48 بتقدير ممتاز.', descEn:'Almatrafiah Elementary School — 2021/2022, GPA 91.48, Excellent.' },
-    { cat:'school', img:'school7.jpg', title:'شهادة الصف الأول المتوسط', titleEn:'Intermediate First Grade Certificate', issuer:'وزارة التعليم', year:2023, desc:'متوسطة الريحان — العام الدراسي 1443/1444هـ، المعدل 88.28 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2022/2023, GPA 88.28, Very Good.' },
-    { cat:'school', img:'school8.jpg', title:'شهادة الصف الثاني المتوسط', titleEn:'Intermediate Second Grade Certificate', issuer:'وزارة التعليم', year:2024, desc:'متوسطة الريحان — العام الدراسي 1444/1445هـ، المعدل 87.39 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2023/2024, GPA 87.39, Very Good.' },
-    { cat:'school', img:'school9.jpg', title:'شهادة الصف الثالث المتوسط', titleEn:'Intermediate Third Grade Certificate', issuer:'وزارة التعليم', year:2025, desc:'متوسطة الريحان — العام الدراسي 1445/1446هـ، المعدل 86.28 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2024/2025, GPA 86.28, Very Good.' },
-    { cat:'school', img:'school10.jpg', title:'شهادة الصف الأول الثانوي', titleEn:'First Secondary Grade Certificate', issuer:'وزارة التعليم', year:2026, desc:'ثانوية الدفي (مسارات) — العام الدراسي 1446/1447هـ، المعدل التراكمي 87.41 بتقدير جيد جدًا مرتفع.', descEn:'Al-Deffy Secondary School — 2025/2026, CGP 87.41, Very Good +.' }
+    { cat:'school', img:'school1.jpg', title:'شهادة الصف الأول الابتدائي', titleEn:'Elementary First Grade Certificate', issuer:'وزارة التعليم', year:2017, desc:'ابتدائية جلمودة — العام الدراسي 1437/1438هـ، ينتقل الطالب بتقدير متفوق في جميع المواد.', descEn:'Jolmodah Elementary School — 2016/2017, promoted with Excellent in all subjects.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=8bbc3bc6-4683-4218-8090-2dd540327e15' },
+    { cat:'school', img:'school2.jpg', title:'شهادة الصف الثاني الابتدائي', titleEn:'Elementary Second Grade Certificate', issuer:'وزارة التعليم', year:2018, desc:'ابتدائية الدفي — العام الدراسي 1438/1439هـ، ينتقل الطالب.', descEn:'Aldeffy Elementary School — 2017/2018, promoted to the next grade.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=dc36db2e-11f6-4c4c-abee-e383e4031dc0' },
+    { cat:'school', img:'school3.jpg', title:'شهادة الصف الثالث الابتدائي', titleEn:'Elementary Third Grade Certificate', issuer:'وزارة التعليم', year:2019, desc:'ابتدائية المطرفية — العام الدراسي 1439/1440هـ، ينتقل الطالب.', descEn:'Almatrafiah Elementary School — 2018/2019, promoted to the next grade.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=f6761c58-1d75-426f-9f3d-2f7d1a94d7e7' },
+    { cat:'school', img:'school4.jpg', title:'شهادة الصف الرابع الابتدائي', titleEn:'Elementary Fourth Grade Certificate', issuer:'وزارة التعليم', year:2020, desc:'ابتدائية المطرفية — العام الدراسي 1440/1441هـ، ناجح وينتقل للصف التالي.', descEn:'Almatrafiah Elementary School — 2019/2020, passed to the next grade.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=4a3f8a32-b9a2-4350-b7f5-b690ed8de16c' },
+    { cat:'school', img:'school5.jpg', title:'شهادة الصف الخامس الابتدائي', titleEn:'Elementary Fifth Grade Certificate', issuer:'وزارة التعليم', year:2021, desc:'ابتدائية المطرفية — العام الدراسي 1441/1442هـ، ناجح وينتقل للصف التالي.', descEn:'Almatrafiah Elementary School — 2020/2021, passed to the next grade.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=0addf383-aef6-4b6d-a300-cb694038cc3e' },
+    { cat:'school', img:'school6.jpg', title:'شهادة الصف السادس الابتدائي', titleEn:'Elementary Sixth Grade Certificate', issuer:'وزارة التعليم', year:2022, desc:'ابتدائية المطرفية — العام الدراسي 1442/1443هـ، المعدل 91.48 بتقدير ممتاز.', descEn:'Almatrafiah Elementary School — 2021/2022, GPA 91.48, Excellent.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=1812b0aa-90a4-4db4-88f5-c6891354165e' },
+    { cat:'school', img:'school7.jpg', title:'شهادة الصف الأول المتوسط', titleEn:'Intermediate First Grade Certificate', issuer:'وزارة التعليم', year:2023, desc:'متوسطة الريحان — العام الدراسي 1443/1444هـ، المعدل 88.28 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2022/2023, GPA 88.28, Very Good.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=eba5e533-9c1a-4f83-9862-c20d23d2aed4' },
+    { cat:'school', img:'school8.jpg', title:'شهادة الصف الثاني المتوسط', titleEn:'Intermediate Second Grade Certificate', issuer:'وزارة التعليم', year:2024, desc:'متوسطة الريحان — العام الدراسي 1444/1445هـ، المعدل 87.39 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2023/2024, GPA 87.39, Very Good.', verify:'https://edugate.moe.gov.sa/certificate/verify?DocNo=d7324f8d-17d2-4b2c-9165-bbff64f4f154&reportTypeId=2' },
+    { cat:'school', img:'school9.jpg', title:'شهادة الصف الثالث المتوسط', titleEn:'Intermediate Third Grade Certificate', issuer:'وزارة التعليم', year:2025, desc:'متوسطة الريحان — العام الدراسي 1445/1446هـ، المعدل 86.28 بتقدير جيد جدًا.', descEn:'Alryhan Intermediate School — 2024/2025, GPA 86.28, Very Good.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=dc78d015-4357-49aa-9920-27b920a39508' },
+    { cat:'school', img:'school10.jpg', title:'شهادة الصف الأول الثانوي', titleEn:'First Secondary Grade Certificate', issuer:'وزارة التعليم', year:2026, desc:'ثانوية الدفي (مسارات) — العام الدراسي 1446/1447هـ، المعدل التراكمي 87.41 بتقدير جيد جدًا مرتفع.', descEn:'Al-Deffy Secondary School — 2025/2026, CGP 87.41, Very Good +.', verify:'https://edugate.moe.gov.sa/certificate/verify?DocNo=e0d0ae3c-4bb2-4a7f-8506-38af2eebc730&reportTypeId=2' }
 
     // أضف شهادات مدرسية جديدة بنفس الشكل (cat:'school')
   ];
@@ -744,7 +768,6 @@
       `<span class="tag issuer">${esc(issuerOf(c))}</span><span class="tag">${c.year}</span>` +
       (c.hours ? `<span class="tag hours">${t('hoursLong')(c.hours)}</span>` : '') +
       `<span class="tag">${L(secOf(c.cat), 'title')}</span>`;
-    $('counter').textContent = `${state.index + 1} / ${state.visible.length}`;
     const v = $('btnVerify');
     v.hidden = !c.verify;
     if (c.verify) v.href = c.verify;
