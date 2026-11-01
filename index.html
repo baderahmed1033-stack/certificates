@@ -3,356 +3,596 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>شهاداتي | Bader Ahmed</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="ملف الإنجازات — محمي بكلمة مرور." />
+  <title>ملف الإنجازات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --bg: #0a0f1e;
+      --bg-soft: #0f1630;
+      --card: #131a35;
+      --border: rgba(148,163,184,.15);
+      --text: #e8ecf5;
+      --muted: #8d99b8;
+      --accent: #5b8cff;
+      --accent-2: #22d3a6;
+      --radius: 18px;
+      --nav-h: 64px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); }
     body {
       margin: 0;
-      font-family: 'Tahoma', Arial, sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
+      font-family: 'Tajawal','Segoe UI',Tahoma,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
+    body.locked { overflow: hidden; }
+    button { font-family: inherit; }
 
-    header {
-      padding: 40px 20px;
-      text-align: center;
-      background: linear-gradient(135deg, #1e293b, #020617);
+    /* ===== Login gate ===== */
+    body.gated .topbar, body.gated .hero, body.gated #main,
+    body.gated #noResults, body.gated footer { display: none; }
+    .gate {
+      display: none;
+      min-height: 100vh; padding: 20px;
+      align-items: center; justify-content: center;
+      background:
+        radial-gradient(55% 70% at 85% 0%, rgba(91,140,255,.24), transparent 60%),
+        radial-gradient(45% 60% at 8% 100%, rgba(34,211,166,.15), transparent 60%),
+        var(--bg);
     }
-
-    header h1 {
-      margin: 0 0 10px;
-      font-size: 32px;
+    body.gated .gate { display: flex; }
+    .gate-card {
+      width: min(400px, 100%); padding: 34px 28px 28px; text-align: center;
+      background: var(--bg-soft);
+      border: 1px solid var(--border); border-radius: 22px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
     }
-
-    header p {
-      margin: 0;
-      color: #94a3b8;
+    .gate-icon {
+      width: 56px; height: 56px; margin: 0 auto 16px;
+      display: grid; place-items: center; color: var(--accent);
+      background: rgba(91,140,255,.14);
+      border: 1px solid rgba(91,140,255,.35); border-radius: 16px;
     }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px 20px;
+    .gate-card h1 { margin: 0 0 6px; font-size: 22px; font-weight: 800; }
+    .gate-card p { margin: 0 0 22px; color: var(--muted); font-size: 14.5px; }
+    .gate-card label { display: block; text-align: right; font-size: 13px; color: var(--muted); margin: 0 2px 6px; }
+    .gate-card input {
+      width: 100%; margin-bottom: 14px;
+      font-family: inherit; font-size: 15px; padding: 12px 14px;
+      color: var(--text); background: var(--card);
+      border: 1px solid var(--border); border-radius: 12px; outline: none; transition: .2s;
     }
+    .gate-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,140,255,.2); }
+    .gate-card .btn { width: 100%; padding: 12px 20px; font-size: 15px; margin-top: 4px; }
+    .gate-card .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .gate-error { min-height: 22px; margin-top: 12px; font-size: 13.5px; color: #ff8a8a; }
+    .gate-card.shake { animation: shake .35s; }
+    @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
-    .certs {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
+    /* ===== Top nav ===== */
+    .topbar {
+      position: sticky; top: 0; z-index: 500;
+      height: var(--nav-h);
+      background: rgba(10,15,30,.82);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
     }
-
-    .cert {
-      background: #1a1f38;
-      border-radius: 20px;
-      padding: 15px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-      transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
-      cursor: default;
-      overflow: hidden;
-      position: relative;
+    .topbar-inner {
+      max-width: 1200px; height: 100%;
+      margin: 0 auto; padding: 0 20px;
+      display: flex; align-items: center; gap: 18px;
     }
-
-    .cert:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      background: linear-gradient(145deg, #1f2937, #111827);
+    .brand { font-weight: 800; font-size: 17px; white-space: nowrap; }
+    .brand span { color: var(--accent); }
+    .nav-links {
+      display: flex; gap: 4px; flex: 1;
+      overflow-x: auto; scrollbar-width: none;
     }
-
-    .cert img.cert-img {
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      white-space: nowrap;
+      text-decoration: none;
+      font-size: 14px;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 10px;
+      transition: .2s;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.05); }
+    .nav-links a.active { color: #fff; background: rgba(91,140,255,.2); }
+    .search { position: relative; width: 230px; flex-shrink: 0; }
+    .search input {
       width: 100%;
-      border-radius: 16px;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-      cursor: pointer;
+      font-family: inherit; font-size: 14px;
+      padding: 9px 38px 9px 12px;
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px; outline: none; transition: .2s;
     }
-    .cert img.cert-img:hover {
-      transform: scale(1.05);
-    }
+    .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,140,255,.2); }
+    .search svg { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); opacity: .5; }
 
-    .cert-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-    .cert-info .logo {
-      width: 20px;
-      height: 20px;
-      border-radius: 4px;
-      object-fit: contain;
-    }
-
-    .cert-desc {
-      font-size: 13px;
-      color: #94a3b8;
-      display: none;
-      margin-top: 6px;
-    }
-    .cert:hover .cert-desc {
-      display: block;
-    }
-
-    footer {
+    /* ===== Hero ===== */
+    .hero {
+      padding: 70px 20px 54px;
       text-align: center;
-      padding: 20px;
-      color: #64748b;
-      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      background:
+        radial-gradient(55% 80% at 85% 0%, rgba(91,140,255,.24), transparent 60%),
+        radial-gradient(45% 70% at 8% 0%, rgba(34,211,166,.15), transparent 60%),
+        var(--bg);
     }
+    .eyebrow {
+      display: inline-block; padding: 6px 14px; margin-bottom: 18px;
+      font-size: 13px; font-weight: 500; color: var(--accent-2);
+      background: rgba(34,211,166,.1);
+      border: 1px solid rgba(34,211,166,.3);
+      border-radius: 999px;
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(30px,5vw,48px); font-weight: 800; letter-spacing: -.5px; }
+    .hero h1 span {
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero p { margin: 0 auto; max-width: 580px; color: var(--muted); font-size: 17px; }
+    .stats { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+    .stat {
+      min-width: 130px; padding: 16px 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border); border-radius: 16px;
+    }
+    .stat b { display: block; font-size: 28px; font-weight: 800; }
+    .stat span { font-size: 13px; color: var(--muted); }
 
-    /* Modal */
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 20px;
-    }
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: #020617;
-      border-radius: 20px;
-      max-width: 90%;
-      max-height: 90%;
-      padding: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
-      overflow-y: auto;
-      position: relative;
-      text-align: center;
-    }
-
-    .modal-content img {
-      max-width: 70vw;
-      max-height: 60vh;
-      object-fit: contain;
+    /* ===== Sections ===== */
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px 20px 60px; }
+    .section { padding: 44px 0 8px; }
+    .section + .section { border-top: 1px solid var(--border); margin-top: 28px; }
+    .section-head { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .section-icon {
+      width: 50px; height: 50px; flex-shrink: 0;
+      display: grid; place-items: center;
+      color: var(--c, var(--accent));
+      background: color-mix(in srgb, var(--c, var(--accent)) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--c, var(--accent)) 35%, transparent);
       border-radius: 14px;
-      margin-bottom: 15px;
-      image-rendering: -webkit-optimize-contrast;
+    }
+    .section-head h2 { margin: 0; font-size: 24px; font-weight: 800; }
+    .section-head p { margin: 2px 0 0; color: var(--muted); font-size: 14.5px; }
+    .count {
+      margin-inline-start: auto;
+      font-size: 13px; padding: 4px 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: 999px; white-space: nowrap;
     }
 
-    .modal-content h3 {
-      margin: 0 0 8px;
-      font-size: 24px;
-      color: #f3f4f6;
+    .certs { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 22px; }
+    .cert {
+      display: flex; flex-direction: column; padding: 0;
+      text-align: right; color: inherit; cursor: pointer;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
     }
-
-    .modal-content p {
-      margin: 0;
-      color: #94a3b8;
-      font-size: 16px;
-      line-height: 1.5;
+    .cert:hover, .cert:focus-visible {
+      transform: translateY(-6px);
+      border-color: color-mix(in srgb, var(--c, var(--accent)) 60%, transparent);
+      box-shadow: 0 18px 40px rgba(0,0,0,.45);
+      outline: none;
     }
-
-    .close {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #ef4444;
-      color: #fff;
-      font-weight: bold;
-      font-size: 14px;
-      padding: 6px 12px;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      z-index: 10;
-      user-select: none;
+    .thumb { position: relative; aspect-ratio: 16/10; background: var(--bg-soft); overflow: hidden; }
+    .thumb img {
+      width: 100%; height: 100%; display: block;
+      object-fit: cover; object-position: top center;
+      transition: transform .5s;
     }
-
-    .close:hover {
-      background: #dc2626;
-      transform: scale(1.1);
+    .cert:hover .thumb img { transform: scale(1.06); }
+    .thumb::after {
+      content: 'عرض الشهادة';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #fff;
+      background: rgba(10,15,30,.62);
+      opacity: 0; transition: opacity .3s;
     }
-
-    .download-btn {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #3b82f6;
-      color: #fff;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
-      user-select: none;
+    .cert:hover .thumb::after, .cert:focus-visible .thumb::after { opacity: 1; }
+    .body { padding: 15px 17px 17px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .body h3 { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.5; }
+    .meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; }
+    .tag {
+      font-size: 12px; padding: 3px 10px; border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
     }
+    .tag.issuer { color: #a9c2ff; background: rgba(91,140,255,.12); border-color: rgba(91,140,255,.3); }
+    .tag.hours { color: #7ff0cf; background: rgba(34,211,166,.1); border-color: rgba(34,211,166,.28); }
 
-    .download-btn:hover {
-      background: #2563eb;
-      transform: scale(1.05);
+    /* empty placeholder (school section) */
+    .placeholder {
+      grid-column: 1 / -1;
+      text-align: center; padding: 42px 20px;
+      color: var(--muted);
+      border: 1.5px dashed rgba(148,163,184,.3);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.02);
     }
-    .cert img {
-  width: 100%;          /* كامل عرض البطاقة */
-  height: 180px;        /* ارتفاع ثابت */
-  object-fit: cover;    /* تقص الصورة لتتناسب مع البطاقة */
-  border-radius: 12px;
-  display: block;
-}
+    .placeholder b { display: block; color: var(--text); font-size: 17px; margin-bottom: 6px; }
+    .placeholder code { direction: ltr; unicode-bidi: embed; background: rgba(255,255,255,.08); padding: 2px 8px; border-radius: 6px; font-size: 13px; color: #a9c2ff; }
 
+    .no-results { display: none; text-align: center; color: var(--muted); padding: 70px 0; }
+
+    footer { text-align: center; padding: 28px 20px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); }
+
+    /* ===== Modal ===== */
+    .modal {
+      position: fixed; inset: 0; z-index: 1000;
+      display: none; align-items: center; justify-content: center; padding: 20px;
+      background: rgba(5,8,18,.84); backdrop-filter: blur(8px);
+    }
+    .modal.active { display: flex; animation: fade .25s ease; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    .modal-content {
+      position: relative; width: min(960px,100%); max-height: 94vh; overflow-y: auto;
+      padding: 22px; text-align: center;
+      background: var(--bg-soft);
+      border: 1px solid var(--border); border-radius: 22px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.6);
+    }
+    .modal-img-wrap { background: #fff; border-radius: 14px; padding: 6px; margin-bottom: 18px; }
+    .modal-content img { display: block; max-width: 100%; max-height: 62vh; margin: 0 auto; object-fit: contain; border-radius: 10px; }
+    .modal-content h3 { margin: 0 0 8px; font-size: 22px; }
+    .modal-content p { margin: 0 auto; max-width: 640px; color: var(--muted); }
+    .modal-meta { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+    .actions { display: flex; justify-content: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+    .btn {
+      font-size: 14px; font-weight: 600; padding: 10px 20px;
+      color: var(--text); background: var(--card);
+      border: 1px solid var(--border); border-radius: 12px;
+      cursor: pointer; transition: .2s;
+    }
+    .btn:hover { border-color: var(--accent); }
+    .btn.primary { color: #fff; background: linear-gradient(135deg,var(--accent),#3b63d8); border-color: transparent; }
+    .btn.primary:hover { filter: brightness(1.1); }
+    .icon-btn {
+      position: absolute; top: 14px; z-index: 5;
+      width: 38px; height: 38px; display: grid; place-items: center;
+      font-size: 18px; color: #fff; cursor: pointer;
+      background: rgba(255,255,255,.1);
+      border: 1px solid var(--border); border-radius: 50%; transition: .2s;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,.2); }
+    .close { left: 14px; }
+    .counter { position: absolute; top: 20px; right: 20px; font-size: 13px; color: var(--muted); }
+    .nav { top: 34%; width: 42px; height: 42px; font-size: 20px; }
+    .nav.prev { right: 14px; }
+    .nav.next { left: 14px; }
+
+    @media (max-width: 760px) {
+      .brand { display: none; }
+      .search { width: 150px; }
+      .hero { padding: 50px 16px 38px; }
+      .stat { min-width: 100px; padding: 12px 14px; }
+      .stat b { font-size: 22px; }
+      .section-head h2 { font-size: 20px; }
+      .section-head p { display: none; }
+      .nav { top: 28%; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
   </style>
 </head>
-<body>
+<body class="gated">
 
-<header>
-  <h1>شهاداتي</h1>
-  <p>عرض جميع الشهادات والإنجازات الخاصة بي</p>
-</header>
-
-<div class="container">
-  <div class="certs">
-
-    <div class="cert" onclick="openModal('certificate1.jpg', 'شهادة مفاهيم الذكاء الاصطناعي', 'مقدمة لفهم أساسيات الذكاء الاصطناعي وتطبيقاته العملية.')">
-      <img src="certificate1.jpg" alt="شهادة مفاهيم الذكاء الاصطناعي">
-      <h3>شهادة مفاهيم الذكاء الاصطناعي</h3>
-      <span>SDAIA • 2025</span>
+<div class="gate" id="gate">
+  <form class="gate-card" id="gateCard" autocomplete="off">
+    <div class="gate-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
     </div>
-
-    <div class="cert" onclick="openModal('certificate2.jpg', 'شهادة مبادئ الذكاء الاصطناعي', 'تركز على المبادئ الأساسية للذكاء الاصطناعي وأدواته.')">
-      <img src="certificate2.jpg" alt="شهادة مبادئ الذكاء الاصطناعي">
-      <h3>شهادة مبادئ الذكاء الاصطناعي</h3>
-      <span>SDAIA • 2025</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate3.jpg', 'دليل شامل للتجارة الالكترونية', 'برنامج تدريبي لتعلم التجارة الإلكترونية والتسويق الرقمي.')">
-      <img src="certificate3.jpg" alt="دليل شامل للتجارة الالكترونية">
-      <h3>دليل شامل للتجارة الالكترونية</h3>
-      <span>HADAF • 2025</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate4.jpg', 'شهادة التسويق', 'تطوير مهارات التسويق الرقمي وتحليل الحملات الإعلانية.')">
-      <img src="certificate4.jpg" alt="شهادة التسويق">
-      <h3>شهادة التسويق</h3>
-      <span>HADAF • 2025</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate5.jpg', 'شهادة تطبيقات علم البيانات في القطاع الحكومي', 'تطبيق علم البيانات لتحسين اتخاذ القرار داخل القطاع الحكومي.')">
-      <img src="certificate5.jpg" alt="شهادة تطبيقات علم البيانات في القطاع الحكومي">
-      <h3>شهادة تطبيقات علم البيانات في القطاع الحكومي</h3>
-      <span>HADAF • 2025</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate6.jpg', 'شهادة ريالي للوعي المالي', 'برنامج توعية مالية لتعليم التخطيط المالي وإدارة الميزانية.')">
-      <img src="certificate6.jpg" alt="شهادة ريالي للوعي المالي">
-      <h3>شهادة ريالي للوعي المالي</h3>
-      <span>Riyali × MOE • 2025</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate7.jpg', 'شهادة ساعة برمجة 1', 'برنامج Hour of Code لتعلم أساسيات البرمجة والتفكير المنطقي.')">
-      <img src="certificate7.jpg" alt="شهادة ساعة برمجة 1">
-      <h3>شهادة ساعة برمجة 1</h3>
-      <span>Microsoft • 2023</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate8.jpg', 'شهادة ساعة برمجة 2', 'المرحلة الثانية من Hour of Code لتعزيز مهارات البرمجة.')">
-      <img src="certificate8.jpg" alt="شهادة ساعة برمجة 2">
-      <h3>شهادة ساعة برمجة 2</h3>
-      <span>Microsoft • 2023</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate9.jpg', 'شهادة ساعة برمجة 3', 'المرحلة النهائية من Hour of Code لتطبيق مفاهيم البرمجة بشكل عملي.')">
-      <img src="certificate9.jpg" alt="شهادة ساعة برمجة 3">
-      <h3>شهادة ساعة برمجة 3</h3>
-      <span>Microsoft • 2023</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate10.jpg', 'شهادة المعسكر العالمي للكشافة', 'المشاركة في JOTA-JOTI، الحدث العالمي للكشافة عبر الإنترنت.')">
-      <img src="certificate10.jpg" alt="شهادة المعسكر العالمي للكشافة">
-      <h3>شهادة المعسكر العالمي للكشافة</h3>
-      <span>Jota Joti • 2023</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate11.jpg', 'شهادة مسابقة المعرفة الإحصائية', '  مشاركة إلكترونية صادرة من الهيئة العامة للإحصاء بالتعاون مع وزارة التعليم.')">
-      <img src="certificate11.jpg" alt="شهادة مسابقة المعرفة الإحصائية">
-      <h3>شهادة مسابقة المعرفة الإحصائية</h3>
-      <span> GASTAT × MOE • 2026</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate12.jpg', 'شهادة إتمام دورة العمل الحر', 'شهادة إتمام دورة العمل الحر المقدمة من برنامج التدريب الإلكتروني، بواقع 3 ساعات تدريبية.')">
-      <img src="certificate12.jpg" alt="شهادة إتمام دورة العمل الحر">
-      <h3>شهادة إتمام دورة العمل الحر</h3>
-      <span>HRDF × SDB • 2026</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate13.jpg', 'شهادة إتمام دورة إدارة مشاريع تقنية المعلومات', 'شهادة إتمام دورة إدارة مشاريع تقنية المعلومات المقدمة من برنامج التدريب الإلكتروني، بواقع ساعة تدريبية واحدة.')">
-      <img src="certificate13.jpg" alt="شهادة إتمام دورة إدارة مشاريع تقنية المعلومات">
-      <h3>شهادة إتمام دورة إدارة مشاريع تقنية المعلومات</h3>
-      <span>HRDF • IT Project Management • 2026</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate14.jpg', 'شهادة إتمام دورة أساسيات الإدارة', 'شهادة إتمام دورة أساسيات الإدارة المقدمة من برنامج التدريب الإلكتروني، بواقع ساعتين تدريبيتين.')">
-      <img src="certificate14.jpg" alt="شهادة إتمام دورة أساسيات الإدارة">
-      <h3>شهادة إتمام دورة أساسيات الإدارة</h3>
-      <span>HRDF • 2026</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate15.jpg', 'شهادة إتمام دورة إدارة الرياضات الإلكترونية', 'شهادة إتمام دورة إدارة الرياضات الإلكترونية المقدمة من برنامج التدريب الإلكتروني، بواقع 11 ساعة تدريبية.')">
-      <img src="certificate15.jpg" alt="شهادة إتمام دورة إدارة الرياضات الإلكترونية">
-      <h3>شهادة إتمام دورة إدارة الرياضات الإلكترونية</h3>
-      <span>HRDF × HP • 2026</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate16.jpg', 'شهادة إتمام دورة كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', 'شهادة إتمام دورة كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم المقدمة من برنامج التدريب الإلكتروني، بواقع ساعة تدريبية واحدة.')">
-      <img src="certificate16.jpg" alt="شهادة إتمام دورة كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم">
-      <h3>شهادة إتمام دورة كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم</h3>
-      <span>HRDF × British Council • 2026</span>
-    </div>
-
-    <div class="cert" onclick="openModal('certificate17.jpg', 'شهادة إتمام دورة أمن الذكاء الاصطناعي', 'شهادة إتمام دورة أمن الذكاء الاصطناعي المقدمة من برنامج التدريب الإلكتروني، بواقع ساعة تدريبية واحدة.')">
-      <img src="certificate17.jpg" alt="شهادة إتمام دورة أمن الذكاء الاصطناعي">
-      <h3>شهادة إتمام دورة أمن الذكاء الاصطناعي</h3>
-      <span>HRDF • IT Project Management • 2026</span>
-    </div>
-
-  </div>
+    <h1>ملف الإنجازات</h1>
+    <p>أدخل بيانات الدخول للاطلاع على الشهادات.</p>
+    <label for="gUser">اسم المستخدم</label>
+    <input type="text" id="gUser" autocapitalize="off" spellcheck="false" required />
+    <label for="gPass">كلمة المرور</label>
+    <input type="password" id="gPass" inputmode="numeric" required />
+    <button class="btn primary" type="submit" id="gBtn">دخول</button>
+    <div class="gate-error" id="gError" role="alert"></div>
+  </form>
 </div>
 
+<nav class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">بدر <span>باشراحيل</span></div>
+    <div class="nav-links" id="navLinks"></div>
+    <label class="search">
+      <input type="search" id="search" placeholder="بحث..." aria-label="بحث" />
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </label>
+  </div>
+</nav>
 
+<header class="hero">
+  <span class="eyebrow">ملف الإنجازات</span>
+  <h1>شهادات <span>بدر أحمد باشراحيل</span></h1>
+  <p>الشهادات المهنية والمدرسية والأنشطة، مصنّفة في أقسام لسهولة التصفح.</p>
+  <div class="stats">
+    <div class="stat"><b id="statCount">0</b><span>شهادة</span></div>
+    <div class="stat"><b id="statHours">0</b><span>ساعة تدريبية</span></div>
+    <div class="stat"><b id="statIssuers">0</b><span>جهة مانحة</span></div>
+  </div>
+</header>
 
+<main class="container" id="main"></main>
+<p class="no-results" id="noResults">لا توجد نتائج مطابقة لبحثك.</p>
 
-<footer>
-  © 2026 Bader Ahmed – جميع الحقوق محفوظة
-</footer>
+<footer>© 2026 بدر أحمد باشراحيل — جميع الحقوق محفوظة</footer>
 
-<div class="modal" id="modal" onclick="closeModal()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <div class="close" onclick="closeModal()"><span>✕</span> إغلاق</div>
-    <img id="modalImg" src="" />
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <button class="icon-btn close" id="btnClose" aria-label="إغلاق">✕</button>
+    <span class="counter" id="counter"></span>
+    <button class="icon-btn nav prev" id="btnPrev" aria-label="السابقة">›</button>
+    <button class="icon-btn nav next" id="btnNext" aria-label="التالية">‹</button>
+    <div class="modal-img-wrap"><img id="modalImg" alt="" /></div>
     <h3 id="modalTitle"></h3>
+    <div class="modal-meta" id="modalMeta"></div>
     <p id="modalInfo"></p>
-    <button class="download-btn" onclick="downloadCert()">تحميل الشهادة</button>
+    <div class="actions">
+      <button class="btn primary" id="btnDownload">تحميل الشهادة</button>
+      <button class="btn" id="btnClose2">إغلاق</button>
+    </div>
   </div>
 </div>
 
 <script>
-  function openModal(img, title, info){
-  document.getElementById('modalImg').src = img;
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalInfo').textContent = info || ''; // لو info فاضي يعرض فراغ
-  document.getElementById('modal').classList.add('active');
-}
+  /* =========================================================
+     الأقسام — رتّبها أو عدّل أسماءها كما تريد
+     ========================================================= */
+  const SECTIONS = [
+    { id: 'ai',     title: 'الذكاء الاصطناعي والبيانات', desc: 'مفاهيم الذكاء الاصطناعي وأمنه وعلم البيانات.', color: '#5b8cff',
+      icon: '<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/>' },
+    { id: 'tech',   title: 'البرمجة والتقنية', desc: 'أساسيات البرمجة وإدارة مشاريع التقنية.', color: '#22d3a6',
+      icon: '<path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/>' },
+    { id: 'biz',    title: 'الأعمال والإدارة', desc: 'التجارة الإلكترونية والتسويق والإدارة والعمل الحر.', color: '#f5a524',
+      icon: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>' },
+    { id: 'skills', title: 'مهارات وأنشطة', desc: 'الوعي المالي والكتابة المهنية والمشاركات والفعاليات.', color: '#c084fc',
+      icon: '<circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/>' },
+    { id: 'school', title: 'الشهادات المدرسية', desc: 'شهادات التفوق والتكريم والمراحل الدراسية.', color: '#f472b6',
+      icon: '<path d="m22 9-10-5L2 9l10 5 10-5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>' }
+  ];
 
+  /* =========================================================
+     الشهادات — أضف شهادة جديدة بسطر واحد
+     cat = رقم القسم (ai / tech / biz / skills / school)
+     ========================================================= */
+  const CERTS = [
+    // ---- الذكاء الاصطناعي والبيانات
+    { cat:'ai', img:'certificate1.jpg',  title:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة', issuer:'SDAIA', year:2025, desc:'مفاهيم الذكاء الاصطناعي وتطبيقاته المتقدمة، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.' },
+    { cat:'ai', img:'certificate2.jpg',  title:'مبادئ الذكاء الاصطناعي', issuer:'SDAIA', year:2025, desc:'المبادئ الأساسية للذكاء الاصطناعي وأدواته، ضمن مبادرة مليون سعودي للذكاء الاصطناعي.' },
+    { cat:'ai', img:'certificate5.jpg',  title:'تطبيقات علم البيانات في القطاع الحكومي', issuer:'HADAF × قدراتك', year:2025, hours:4, desc:'تطبيق علم البيانات لتحسين اتخاذ القرار داخل القطاع الحكومي.' },
+    { cat:'ai', img:'certificate17.jpg', title:'أمن الذكاء الاصطناعي', issuer:'HRDF', year:2026, hours:1, desc:'دورة أمن الذكاء الاصطناعي المقدمة من برنامج التدريب الإلكتروني.' },
 
-  function closeModal() {
-    document.getElementById('modal').classList.remove('active');
+    // ---- البرمجة والتقنية
+    { cat:'tech', img:'certificate7.jpg',  title:'ساعة برمجة (1)', issuer:'Code.org × Microsoft', year:2023, desc:'برنامج Hour of Code لتعلم أساسيات البرمجة والتفكير المنطقي.' },
+    { cat:'tech', img:'certificate8.jpg',  title:'ساعة برمجة (2)', issuer:'Code.org × Microsoft', year:2023, desc:'المرحلة الثانية من Hour of Code لتعزيز مهارات البرمجة.' },
+    { cat:'tech', img:'certificate9.jpg',  title:'ساعة برمجة (3)', issuer:'Code.org × Microsoft', year:2023, desc:'المرحلة الثالثة من Hour of Code لتطبيق مفاهيم البرمجة عمليًا.' },
+    { cat:'tech', img:'certificate13.jpg', title:'إدارة مشاريع تقنية المعلومات', issuer:'HRDF', year:2026, hours:1, desc:'دورة إدارة مشاريع تقنية المعلومات المقدمة من برنامج التدريب الإلكتروني.' },
+
+    // ---- الأعمال والإدارة
+    { cat:'biz', img:'certificate3.jpg',  title:'دليلك الشامل إلى التجارة الإلكترونية', issuer:'HADAF × منشآت', year:2025, hours:2, desc:'أساسيات التجارة الإلكترونية والتسويق الرقمي.' },
+    { cat:'biz', img:'certificate4.jpg',  title:'التسويق', issuer:'HADAF × بنك التنمية الاجتماعية', year:2025, hours:5, desc:'تطوير مهارات التسويق وتحليل الحملات الإعلانية.' },
+    { cat:'biz', img:'certificate12.jpg', title:'العمل الحر', issuer:'HRDF × بنك التنمية الاجتماعية', year:2026, hours:3, desc:'دورة العمل الحر المقدمة من برنامج التدريب الإلكتروني.' },
+    { cat:'biz', img:'certificate14.jpg', title:'أساسيات الإدارة', issuer:'HRDF', year:2026, hours:2, desc:'دورة أساسيات الإدارة المقدمة من برنامج التدريب الإلكتروني.' },
+    { cat:'biz', img:'certificate15.jpg', title:'إدارة الرياضات الإلكترونية', issuer:'HRDF × HP', year:2026, hours:11, desc:'دورة إدارة الرياضات الإلكترونية المقدمة من برنامج التدريب الإلكتروني.' },
+
+    // ---- مهارات وأنشطة
+    { cat:'skills', img:'certificate6.jpg',  title:'شهادة شكر وتقدير — ريالي للوعي المالي', issuer:'ريالي × وزارة التعليم', year:2025, desc:'اجتياز برنامج شباب ريالي وإتمام مرحلة الوعي المالي.' },
+    { cat:'skills', img:'certificate10.jpg', title:'المعسكر العالمي للكشافة JOTA-JOTI', issuer:'World Scouts', year:2023, desc:'المشاركة في JOTA-JOTI، الحدث العالمي للكشافة عبر الراديو والإنترنت.' },
+    { cat:'skills', img:'certificate11.jpg', title:'مسابقة المعرفة الإحصائية', issuer:'GASTAT × وزارة التعليم', year:2026, desc:'مشاركة إلكترونية صادرة من الهيئة العامة للإحصاء بالتعاون مع وزارة التعليم.' },
+    { cat:'skills', img:'certificate16.jpg', title:'كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', issuer:'HRDF × British Council', year:2026, hours:1, desc:'كتابة الرسائل الرسمية وخطابات التقديم.' }
+
+    // ---- الشهادات المدرسية: أضف شهاداتك هنا بنفس الشكل، مثال:
+    // { cat:'school', img:'school1.jpg', title:'شهادة التفوق الدراسي', issuer:'مدرسة ...', year:2025, desc:'تقدير للتفوق في الفصل الدراسي الأول.' },
+  ];
+
+  /* ===================== المنطق ===================== */
+  const $ = (id) => document.getElementById(id);
+  const state = { q: '', visible: [], index: 0 };
+  const secOf = (id) => SECTIONS.find(s => s.id === id);
+  const hoursLabel = (h) => h === 1 ? 'ساعة' : h === 2 ? 'ساعتان' : h <= 10 ? `${h} ساعات` : `${h} ساعة`;
+
+  /* Stats */
+  function countUp(el, target) {
+    const d = 900, s = performance.now();
+    (function tick(now) {
+      const t = Math.min((now - s) / d, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3)));
+      if (t < 1) requestAnimationFrame(tick);
+    })(s);
+  }
+  function runStats() {
+    countUp($('statCount'), CERTS.length);
+    countUp($('statHours'), CERTS.reduce((a, c) => a + (c.hours || 0), 0));
+    countUp($('statIssuers'), new Set(CERTS.flatMap(c => c.issuer.split('×').map(x => x.trim()))).size);
   }
 
+  /* Nav */
+  $('navLinks').innerHTML = SECTIONS.map(s => `<a href="#${s.id}" data-nav="${s.id}">${s.title}</a>`).join('');
+
+  /* Render */
+  function render() {
+    const q = state.q;
+    const match = (c) => !q || (c.title + ' ' + c.issuer + ' ' + c.year).toLowerCase().includes(q);
+    state.visible = [];
+    let html = '', shown = 0;
+
+    SECTIONS.forEach(s => {
+      const items = CERTS.filter(c => c.cat === s.id && match(c));
+      const total = CERTS.filter(c => c.cat === s.id).length;
+      if (q && !items.length) return;                      // أخفِ القسم الفارغ أثناء البحث
+      shown += items.length;
+
+      const cards = items.map(c => {
+        const idx = state.visible.push(c) - 1;
+        return `
+        <button class="cert" data-i="${idx}" aria-label="عرض ${c.title}">
+          <div class="thumb"><img src="${c.img}" alt="${c.title}" loading="lazy" onerror="this.style.opacity=.15"></div>
+          <div class="body">
+            <h3>${c.title}</h3>
+            <div class="meta">
+              <span class="tag issuer">${c.issuer}</span>
+              <span class="tag">${c.year}</span>
+              ${c.hours ? `<span class="tag hours">${hoursLabel(c.hours)}</span>` : ''}
+            </div>
+          </div>
+        </button>`;
+      }).join('');
+
+      const empty = !total ? `
+        <div class="placeholder">
+          <b>سيتم إضافة الشهادات قريبًا</b>
+          أضف شهاداتك في مصفوفة <code>CERTS</code> داخل الكود بقيمة <code>cat:'${s.id}'</code>
+        </div>` : '';
+
+      html += `
+      <section class="section" id="${s.id}" style="--c:${s.color}">
+        <div class="section-head">
+          <div class="section-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.icon}</svg></div>
+          <div><h2>${s.title}</h2><p>${s.desc}</p></div>
+          <span class="count">${total} ${total === 1 ? 'شهادة' : 'شهادات'}</span>
+        </div>
+        <div class="certs">${cards}${empty}</div>
+      </section>`;
+    });
+
+    $('main').innerHTML = html;
+    $('noResults').style.display = q && !shown ? 'block' : 'none';
+    observe();
+  }
+
+  $('search').addEventListener('input', (e) => { state.q = e.target.value.trim().toLowerCase(); render(); });
+  $('main').addEventListener('click', (e) => {
+    const card = e.target.closest('[data-i]');
+    if (card) openModal(+card.dataset.i);
+  });
+
+  /* Active nav highlight */
+  let io;
+  function observe() {
+    if (io) io.disconnect();
+    io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === en.target.id));
+        }
+      });
+    }, { rootMargin: '-35% 0px -60% 0px' });
+    document.querySelectorAll('.section').forEach(s => io.observe(s));
+  }
+
+  /* Modal */
+  function openModal(i) {
+    state.index = (i + state.visible.length) % state.visible.length;
+    const c = state.visible[state.index];
+    $('modalImg').src = c.img;
+    $('modalImg').alt = c.title;
+    $('modalTitle').textContent = c.title;
+    $('modalInfo').textContent = c.desc || '';
+    $('modalMeta').innerHTML =
+      `<span class="tag issuer">${c.issuer}</span><span class="tag">${c.year}</span>` +
+      (c.hours ? `<span class="tag hours">${c.hours} ساعة تدريبية</span>` : '') +
+      `<span class="tag">${secOf(c.cat).title}</span>`;
+    $('counter').textContent = `${state.index + 1} / ${state.visible.length}`;
+    const multi = state.visible.length > 1;
+    $('btnPrev').style.display = $('btnNext').style.display = multi ? 'grid' : 'none';
+    $('modal').classList.add('active');
+    document.body.classList.add('locked');
+  }
+  function closeModal() { $('modal').classList.remove('active'); document.body.classList.remove('locked'); }
   function downloadCert() {
-    const imgSrc = document.getElementById('modalImg').src;
-    const link = document.createElement('a');
-    link.href = imgSrc;
-    link.download = "Certificate";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const c = state.visible[state.index];
+    const a = document.createElement('a');
+    a.href = c.img;
+    a.download = `${c.title}.${c.img.split('.').pop()}`;
+    document.body.appendChild(a); a.click(); a.remove();
   }
-</script>
+  $('btnClose').onclick = $('btnClose2').onclick = closeModal;
+  $('btnDownload').onclick = downloadCert;
+  $('btnPrev').onclick = () => openModal(state.index - 1);
+  $('btnNext').onclick = () => openModal(state.index + 1);
+  $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (!$('modal').classList.contains('active')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowLeft') openModal(state.index + 1);
+    if (e.key === 'ArrowRight') openModal(state.index - 1);
+  });
 
+  /* ===================== بوابة الدخول ===================== */
+  // SHA-256 لقيمة: "اسم المستخدم بحروف صغيرة" + ":" + "كلمة المرور"
+  const AUTH_HASH = '6119ef2864c806b681c7d96ca0f4a5b33602ba45d4c419d2ba791a3ccca65b1d';
+  const SESSION_KEY = 'achievements_unlocked';
+  let failed = 0, lockedUntil = 0;
+
+  async function sha256(text) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function unlock() {
+    document.body.classList.remove('gated');
+    document.title = 'ملف الإنجازات';
+    runStats();
+    render();
+  }
+  function showError(msg) {
+    $('gError').textContent = msg;
+    const card = $('gateCard');
+    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+  }
+
+  $('gateCard').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const now = Date.now();
+    if (now < lockedUntil) {
+      showError(`محاولات كثيرة. انتظر ${Math.ceil((lockedUntil - now) / 1000)} ثانية.`);
+      return;
+    }
+    if (!(window.crypto && crypto.subtle)) {
+      showError('المتصفح لا يدعم التحقق. افتح الصفحة عبر رابط https.');
+      return;
+    }
+    $('gBtn').disabled = true;
+    const user = $('gUser').value.trim().toLowerCase();
+    const pass = $('gPass').value.trim();
+    const hash = await sha256(user + ':' + pass);
+    await new Promise(r => setTimeout(r, 500));            // تأخير بسيط ضد التخمين السريع
+    $('gBtn').disabled = false;
+
+    if (hash === AUTH_HASH) {
+      try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (_) {}
+      unlock();
+    } else {
+      failed++;
+      $('gPass').value = '';
+      if (failed >= 5) { lockedUntil = Date.now() + 30000; failed = 0; showError('محاولات كثيرة. حاول بعد 30 ثانية.'); }
+      else showError('اسم المستخدم أو كلمة المرور غير صحيحة.');
+    }
+  });
+
+  let remembered = false;
+  try { remembered = sessionStorage.getItem(SESSION_KEY) === '1'; } catch (_) {}
+  if (remembered) unlock(); else $('gUser').focus();
+</script>
 </body>
 </html>
