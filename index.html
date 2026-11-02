@@ -181,10 +181,13 @@
       border: 1px solid rgba(34,211,166,.3);
       border-radius: 999px;
     }
-    .hero h1 { margin: 0 0 10px; font-size: clamp(30px,5vw,48px); font-weight: 800; letter-spacing: -.5px; }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(30px,5vw,48px); font-weight: 800; letter-spacing: 0; line-height: 1.5; }
     .hero h1 span {
+      /* padding عمودي فقط: يوسّع منطقة التدرّج فلا تُقصّ النقاط والهمزات، ولا يغيّر المسافات بين الكلمات */
+      padding: .3em 0 .2em;
       background: linear-gradient(90deg,var(--accent),var(--accent-2));
       -webkit-background-clip: text; background-clip: text; color: transparent;
+      -webkit-box-decoration-break: clone; box-decoration-break: clone;
     }
     .hero p { margin: 0 auto; max-width: 580px; color: var(--muted); font-size: 17px; }
     .stats { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
@@ -420,7 +423,6 @@
     [dir="ltr"] .search input { padding: 9px 12px 9px 38px; }
     [dir="ltr"] .search svg { right: auto; left: 12px; }
     [dir="ltr"] .profile-btn { padding: 4px 14px 4px 4px; }
-    [dir="ltr"] .hero h1 { letter-spacing: 0; }
 
     @media (max-width: 1150px) { .brand { display: none; } .search { width: 140px; } }
     @media (max-width: 760px) {
