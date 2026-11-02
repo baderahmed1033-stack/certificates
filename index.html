@@ -431,12 +431,14 @@
     /* الجوال واللمس: لون عادي بدل التدرّج المقصوص على الحروف (يقصّ نقاط وهمزات الخط العربي) */
     @media (max-width: 900px), (hover: none) {
       .hero h1 span {
+        display: block;               /* كل كلمة في سطر: «شهادات» ثم اسمك تحتها */
+        line-height: 1.6;
         padding: 0;
         background: none; -webkit-background-clip: border-box; background-clip: border-box;
         -webkit-text-fill-color: currentColor;
       }
       #heroTitle { color: var(--accent); }
-      #heroName  { color: var(--accent-2); }
+      #heroName  { color: var(--accent-2); margin-top: .1em; }
     }
     @media (max-width: 1150px) { .brand { display: none; } .search { width: 140px; } }
     @media (max-width: 760px) {
