@@ -110,6 +110,10 @@
     .gate-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,140,255,.2); }
     .gate-card .btn { width: 100%; padding: 12px 20px; font-size: 15px; margin-top: 4px; }
     .gate-card .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .gate-sep { display: flex; align-items: center; gap: 12px; margin: 18px 0 14px; font-size: 13px; color: var(--muted); }
+    .gate-sep::before, .gate-sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    #gKey { direction: ltr; text-align: left; letter-spacing: 1.5px; text-transform: uppercase; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+    #gKey::placeholder { letter-spacing: 1.5px; opacity: .45; }
     .gate-error { min-height: 22px; margin-top: 12px; font-size: 13.5px; color: #ff8a8a; }
     .gate-card.shake { animation: shake .35s; }
     @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
@@ -424,6 +428,16 @@
     [dir="ltr"] .search svg { right: auto; left: 12px; }
     [dir="ltr"] .profile-btn { padding: 4px 14px 4px 4px; }
 
+    /* الجوال واللمس: لون عادي بدل التدرّج المقصوص على الحروف (يقصّ نقاط وهمزات الخط العربي) */
+    @media (max-width: 900px), (hover: none) {
+      .hero h1 span {
+        padding: 0;
+        background: none; -webkit-background-clip: border-box; background-clip: border-box;
+        -webkit-text-fill-color: currentColor;
+      }
+      #heroTitle { color: var(--accent); }
+      #heroName  { color: var(--accent-2); }
+    }
     @media (max-width: 1150px) { .brand { display: none; } .search { width: 140px; } }
     @media (max-width: 760px) {
       :root { --nav-h: 100px; }
@@ -475,6 +489,10 @@
     <label for="gPass" data-t="pass">كلمة المرور</label>
     <input type="password" id="gPass" inputmode="numeric" required />
     <button class="btn primary" type="submit" id="gBtn" data-t="enter">دخول</button>
+    <div class="gate-sep"><span data-t="or">أو</span></div>
+    <label for="gKey" data-t="keyLbl">مفتاح دخول (استخدام واحد)</label>
+    <input type="text" id="gKey" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX" />
+    <button class="btn" type="button" id="gKeyBtn" data-t="keyEnter">دخول بالمفتاح</button>
     <div class="gate-error" id="gError" role="alert"></div>
   </form>
 </div>
@@ -641,7 +659,7 @@
           name:'بدر أحمد باشراحيل', brand:'بدر <span>باشراحيل</span>', role:'طالب', age:'العمر', ageVal:'17 سنة',
           birth:'مكان الميلاد', birthVal:'المملكة العربية السعودية', footer:'© 2026 بدر أحمد باشراحيل — جميع الحقوق محفوظة',
           wrong:'اسم المستخدم أو كلمة المرور غير صحيحة.', lock30:'محاولات كثيرة. حاول بعد 30 ثانية.',
-          lockN:(n)=>`محاولات كثيرة. انتظر ${n} ثانية.`, nocrypto:'المتصفح لا يدعم التحقق. افتح الصفحة عبر رابط https.',
+          lockN:(n)=>`محاولات كثيرة. انتظر ${n} ثانية.`, nocrypto:'المتصفح لا يدعم التحقق. افتح الصفحة عبر رابط https.', or:'أو', keyLbl:'مفتاح دخول (استخدام واحد)', keyEnter:'دخول بالمفتاح', keyBad:'مفتاح الدخول غير صحيح أو مستخدم من قبل.', keyStorage:'تعذّر استخدام المفتاح: المتصفح يمنع حفظ البيانات (قد تكون في وضع التصفح الخاص).',
           hoursTag:(h)=> h===1?'ساعة':h===2?'ساعتان':h<=10?`${h} ساعات`:`${h} ساعة`, hoursLong:(h)=>`${h} ساعة تدريبية` },
     en: { title:'Achievements Portfolio', gateSub:'Enter your credentials to view the certificates.', user:'Username', pass:'Password', enter:'Sign in',
           heroTitle:'Certificates of', heroP:'Professional and school certificates and activities, organized into sections for easy browsing.',
@@ -652,7 +670,7 @@
           name:'Badr Ahmed Bashraheel', brand:'Badr <span>Bashraheel</span>', role:'Student', age:'Age', ageVal:'17 years',
           birth:'Place of birth', birthVal:'Saudi Arabia', footer:'© 2026 Badr Ahmed Bashraheel — All rights reserved',
           wrong:'Incorrect username or password.', lock30:'Too many attempts. Try again in 30 seconds.',
-          lockN:(n)=>`Too many attempts. Wait ${n} seconds.`, nocrypto:'This browser cannot verify. Open the page over https.',
+          lockN:(n)=>`Too many attempts. Wait ${n} seconds.`, nocrypto:'This browser cannot verify. Open the page over https.', or:'or', keyLbl:'Access key (single use)', keyEnter:'Enter with key', keyBad:'The access key is invalid or already used.', keyStorage:'Cannot use the key: the browser blocks data storage (private mode?).',
           hoursTag:(h)=>`${h}h`, hoursLong:(h)=>`${h} training hours` }
   };
   const ISSUER_EN = { 'قدراتك':'Qudraty', 'منشآت':"Monsha'at", 'بنك التنمية الاجتماعية':'Social Development Bank', 'ريالي':'Riyali', 'وزارة التعليم':'Ministry of Education' };
@@ -1003,6 +1021,48 @@
       else showError(t('wrong'));
     }
   });
+
+  /* ===================== مفاتيح الدخول (استخدام واحد) ===================== */
+  // SHA-256 لـ "key:" + المفتاح بأحرف كبيرة وبدون شرطات. المفاتيح نفسها غير مخزّنة هنا.
+  const KEY_HASHES = ['a7c97bad9840d81f99077f26f115d774aa844d4a42c04024215faf0e94e782e4',
+    '1c27107cd8e7caa85e2f4e3b674b85ec54ca56a6e0bebcd4425aa3151529f590',
+    'dd1a4df5b7632bc873b52f1bfd657bbceab300e12f23b0f34c0b97c46e089ae1',
+    '6ca3ba854338691e64a8e3e1c904cc9c5b56af5a0250ddcf349456c2b758077d',
+    'fd3b97069774454e03df698c9da5b6b070c9df6350f6cbdfde877ab2d37a5c9e',
+    '69378fbe3b64513706538018df9e623f329b6ffe1c1bfd3bc8a9aad65286e6f3',
+    '4818bedb83fa7867b6ce3bb71da515d28b5161b0925b65caf32c49ccf2620468',
+    '91211d7452b4eba0f739cf72c2916dcd5a44349b9f41b5dc7f6c770658826802',
+    '26100c7512f4f8ee045cce538c985b188ccefb0156baee3398ed15a54630db56',
+    '5d16c7faf8b0436a6a40c5372e4288162683241b5cd72703f3089756857c7c0d'];
+  const USED_KEY = 'achievements_used_keys';       // المفاتيح المحروقة على هذا المتصفح
+  const normKey = (k) => k.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  function usedKeys() { try { return JSON.parse(localStorage.getItem(USED_KEY) || '[]'); } catch (_) { return []; } }
+  function burnKey(h) {
+    try { localStorage.setItem(USED_KEY, JSON.stringify(usedKeys().concat(h))); return usedKeys().includes(h); }
+    catch (_) { return false; }
+  }
+  async function keyLogin() {
+    const now = Date.now();
+    if (now < lockedUntil) { showError(t('lockN')(Math.ceil((lockedUntil - now) / 1000))); return; }
+    if (!(window.crypto && crypto.subtle)) { showError(t('nocrypto')); return; }
+    const k = normKey($('gKey').value);
+    $('gKeyBtn').disabled = true;
+    const h = k ? await sha256('key:' + k) : '';
+    await new Promise(r => setTimeout(r, 500));
+    $('gKeyBtn').disabled = false;
+    if (h && KEY_HASHES.includes(h) && !usedKeys().includes(h)) {
+      if (!burnKey(h)) { showError(t('keyStorage')); return; }   // لا ندخل إلا بعد التأكد أن المفتاح احترق
+      $('gKey').value = '';
+      try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (_) {}
+      unlock();
+    } else {
+      failed++; $('gKey').value = '';
+      if (failed >= 5) { lockedUntil = Date.now() + 30000; failed = 0; showError(t('lock30')); }
+      else showError(t('keyBad'));
+    }
+  }
+  $('gKeyBtn').onclick = keyLogin;
+  $('gKey').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); keyLogin(); } });
 
   setLang(lang);
 
