@@ -601,13 +601,15 @@
       icon: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>' },
     { id: 'skills', title: 'مهارات وأنشطة', titleEn: 'Skills & Activities', desc: 'الوعي المالي والكتابة المهنية والمشاركات والفعاليات.', descEn: 'Financial literacy, professional writing, participations and events.', color: '#c084fc',
       icon: '<circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/>' },
+    { id: 'honor',  title: 'الشكر والتقدير والتكريم', titleEn: 'Appreciation & Honors', desc: 'شهادات الشكر والتقدير والتكريم والمشاركات المميزة.', descEn: 'Appreciation, recognition and honor certificates.', color: '#38bdf8',
+      icon: '<circle cx="12" cy="9" r="6"/><path d="m8.2 14-1.2 8 5-3 5 3-1.2-8"/><path d="m12 6 .9 1.8 2 .3-1.4 1.4.3 2-1.8-.9-1.8.9.3-2-1.4-1.4 2-.3z"/>' },
     { id: 'school', title: 'الشهادات المدرسية', titleEn: 'School Certificates', desc: 'شهادات التفوق والتكريم والمراحل الدراسية.', descEn: 'Excellence, honors and school-stage certificates.', color: '#f472b6',
       icon: '<path d="m22 9-10-5L2 9l10 5 10-5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>' }
   ];
 
   /* =========================================================
      الشهادات — أضف شهادة جديدة بسطر واحد
-     cat = القسم (ai / tech / biz / skills / school)
+     cat = القسم (ai / tech / biz / skills / honor / school)
      titleEn / descEn = النسخة الإنجليزية
      verify = رابط التحقق من الشهادة (اختياري — يظهر الزر فقط إن وُجد)
      code   = رمز الشهادة (اختياري — يظهر صندوق الرمز مع زر النسخ إن وُجد)
@@ -633,10 +635,14 @@
     { cat:'biz', img:'certificate15.webp', title:'إدارة الرياضات الإلكترونية', titleEn:'Esports Management', issuer:'HRDF × HP', year:2026, hours:11, desc:'دورة إدارة الرياضات الإلكترونية المقدمة من برنامج التدريب الإلكتروني.', descEn:'Esports management course offered through the e-training program.', code:'db4bcd1d4d9c46a8aa8b53a94db2633f', verify:'https://doroob.sa/ar/employer/check_certificate/' },
 
     // ---- مهارات وأنشطة
-    { cat:'skills', img:'certificate6.webp',  title:'شهادة شكر وتقدير — ريالي للوعي المالي', titleEn:'Appreciation Certificate — Riyali Financial Literacy', issuer:'ريالي × وزارة التعليم', year:2025, desc:'اجتياز برنامج شباب ريالي وإتمام مرحلة الوعي المالي.', descEn:'Completed the Shabab Riyali program and its financial literacy stage.' },
     { cat:'skills', img:'certificate10.webp', title:'المعسكر العالمي للكشافة JOTA-JOTI', titleEn:'JOTA-JOTI World Scout Jamboree', issuer:'World Scouts', year:2023, desc:'المشاركة في JOTA-JOTI، الحدث العالمي للكشافة عبر الراديو والإنترنت.', descEn:'Participation in JOTA-JOTI, the global scouting event over radio and the internet.' },
     { cat:'skills', img:'certificate11.webp', title:'مسابقة المعرفة الإحصائية', titleEn:'Statistical Knowledge Competition', issuer:'GASTAT × وزارة التعليم', year:2026, desc:'مشاركة إلكترونية صادرة من الهيئة العامة للإحصاء بالتعاون مع وزارة التعليم.', descEn:'Online participation issued by the General Authority for Statistics with the Ministry of Education.' },
     { cat:'skills', img:'certificate16.webp', title:'كتابة رسائل البريد الإلكتروني الرسمية وخطابات التقديم', titleEn:'Writing Formal Emails and Cover Letters', issuer:'HRDF × British Council', year:2026, hours:1, desc:'كتابة الرسائل الرسمية وخطابات التقديم.', descEn:'Writing formal messages and cover letters.', code:'b4cb913ee5ca4d6183e8f126233220ae', verify:'https://doroob.sa/ar/employer/check_certificate/' },
+
+    // ---- الشكر والتقدير والتكريم (أضف شهاداتك هنا بـ cat:'honor')
+    { cat:'honor', img:'honor1.webp', title:'شهادة شكر وتقدير — التميز والسلوك', titleEn:'Appreciation Certificate — Excellence and Conduct', issuer:'ثانوية الدفي × وزارة التعليم', year:2026, desc:'شكر وتقدير من إدارة ثانوية الدفي لتميزه وتفوقه الدراسي وحسن أخلاقه وسلوكه في الصف الثاني الثانوي لعام 1448هـ.', descEn:'Appreciation from Al-Deffy Secondary School administration for academic excellence and good conduct in the second secondary grade, 1448 AH.' },
+    { cat:'honor', img:'certificate6.webp',  title:'شهادة شكر وتقدير — ريالي للوعي المالي', titleEn:'Appreciation Certificate — Riyali Financial Literacy', issuer:'ريالي × وزارة التعليم', year:2025, desc:'اجتياز برنامج شباب ريالي وإتمام مرحلة الوعي المالي.', descEn:'Completed the Shabab Riyali program and its financial literacy stage.' },
+
     // ---- الشهادات المدرسية
     { cat:'school', img:'school1.webp', title:'شهادة الصف الأول الابتدائي', titleEn:'Elementary First Grade Certificate', issuer:'وزارة التعليم', year:2017, desc:'ابتدائية جلمودة — العام الدراسي 1437/1438هـ، ينتقل الطالب بتقدير متفوق في جميع المواد.', descEn:'Jolmodah Elementary School — 2016/2017, promoted with Excellent in all subjects.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=8bbc3bc6-4683-4218-8090-2dd540327e15' },
     { cat:'school', img:'school2.webp', title:'شهادة الصف الثاني الابتدائي', titleEn:'Elementary Second Grade Certificate', issuer:'وزارة التعليم', year:2018, desc:'ابتدائية الدفي — العام الدراسي 1438/1439هـ، ينتقل الطالب.', descEn:'Aldeffy Elementary School — 2017/2018, promoted to the next grade.', verify:'https://nataeji.moe.gov.sa/verify?DocNo=dc36db2e-11f6-4c4c-abee-e383e4031dc0' },
@@ -677,7 +683,7 @@
           lockN:(n)=>`Too many attempts. Wait ${n} seconds.`, nocrypto:'This browser cannot verify. Open the page over https.', or:'or', keyLbl:'Access key (single use)', keyEnter:'Enter with key', keyBad:'The access key is invalid or already used.', keyStorage:'Cannot use the key: the browser blocks data storage (private mode?).',
           hoursTag:(h)=>`${h}h`, hoursLong:(h)=>`${h} training hours` }
   };
-  const ISSUER_EN = { 'قدراتك':'Qudraty', 'منشآت':"Monsha'at", 'بنك التنمية الاجتماعية':'Social Development Bank', 'ريالي':'Riyali', 'وزارة التعليم':'Ministry of Education' };
+  const ISSUER_EN = { 'قدراتك':'Qudraty', 'منشآت':"Monsha'at", 'بنك التنمية الاجتماعية':'Social Development Bank', 'ريالي':'Riyali', 'وزارة التعليم':'Ministry of Education', 'ثانوية الدفي':'Al-Deffy Secondary School' };
 
   const $ = (id) => document.getElementById(id);
   let lang = 'ar';
